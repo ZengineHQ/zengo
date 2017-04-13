@@ -2,7 +2,7 @@
 
 var nock = require('nock');
 
-var ZnHttp = require('../../lib/zn-http.js');
+var ZnHttp = require('./lib/zn-http.js');
 
 var Api = require('../../src/api.js');
 
