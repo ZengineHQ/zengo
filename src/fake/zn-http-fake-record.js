@@ -1,6 +1,5 @@
 'use strict';
 
-var map = require('lodash.map');
 var forEach = require('lodash.foreach');
 
 var fakeDaoFor = function(formId) {

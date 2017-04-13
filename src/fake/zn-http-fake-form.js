@@ -1,6 +1,5 @@
 'use strict';
 
-var map = require('lodash.map');
 var filter = require('lodash.filter');
 var find = require('lodash.find');
 var includes = require('lodash.includes');
