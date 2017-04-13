@@ -1,6 +1,6 @@
 'use strict';
 
-var ZnForm = require('../src/zn-form.js');
+var ZnForm = require('../src/form.js');
 
 var ZnFormBuilder = function() {
 	this.data = {

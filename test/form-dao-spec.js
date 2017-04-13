@@ -1,17 +1,17 @@
 'use strict';
 
-describe('ZnFormDao', function() {
+describe('FormDao', function() {
 
 	var util = require('./api-test-util.js');
 
-	var ZnFormDao = require('../src/zn-form-dao.js');
+	var FormDao = require('../src/form-dao.js');
 
-	var znFormDao;
+	var formDao;
 	var znNock;
 
 	beforeEach(function() {
 		var api = util.createApi();
-		znFormDao = ZnFormDao(api);
+		formDao = FormDao(api);
 
 		znNock = util.ZnNock();
 	});
@@ -26,7 +26,7 @@ describe('ZnFormDao', function() {
 				}
 			});
 
-			return znFormDao.get(123).then(function(form) {
+			return formDao.get(123).then(function(form) {
 				expect(form.getId()).to.equal(123);
 			});
 		});
@@ -54,7 +54,7 @@ describe('ZnFormDao', function() {
 				}
 			};
 
-			return znFormDao.query(request).then(function(response) {
+			return formDao.query(request).then(function(response) {
 
 				expect(response.data).to.exist;
 				expect(response.data.length).to.equal(2);
@@ -82,7 +82,7 @@ describe('ZnFormDao', function() {
 				field123: 'apples'
 			};
 
-			return znFormDao.save(form)
+			return formDao.save(form)
 				.then(function(response) {
 					expect(response).to.eql({
 						id: 1,

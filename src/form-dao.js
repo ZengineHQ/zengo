@@ -2,13 +2,13 @@
 
 var map = require('lodash.map');
 
-var createForm = require('./zn-form.js');
+var createForm = require('./form.js');
 var createForms = function(response) {
 	response.data = map(response.data, createForm);
 	return response;
 };
 
-var ZnFormDao = function(api) {
+var FormDao = function(api) {
 	var dao = {};
 	var baseEndpoint = '/forms';
 
@@ -30,4 +30,4 @@ var ZnFormDao = function(api) {
 	return dao;
 };
 
-module.exports = ZnFormDao;
+module.exports = FormDao;

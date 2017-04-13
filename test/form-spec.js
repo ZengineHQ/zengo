@@ -1,6 +1,6 @@
 'use strict';
 
-describe('ZnForm', function() {
+describe('Form', function() {
 
 	var ZnFormBuilder = require('./zn-form-builder.js');
 
@@ -14,12 +14,12 @@ describe('ZnForm', function() {
 
 		// it('should get all linked form ids', function() {
 
-		// 	var znForm = builder
+		// 	var form = builder
 		// 		.field()
 		// 		.linkedField({ id: 1, linkedToForm: 5 })
 		// 		.build();
 
-		// 	var linkedFormIds = znForm.getLinkedFormIds();
+		// 	var linkedFormIds = form.getLinkedFormIds();
 
 		// 	expect(linkedFormIds.length).to.equal(1);
 		// 	expect(linkedFormIds[0]).to.equal(5);

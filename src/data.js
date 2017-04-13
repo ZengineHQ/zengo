@@ -1,7 +1,7 @@
 'use strict';
 
 var createApi = require('./api.js');
-var FormDao = require('./zn-form-dao.js');
+var FormDao = require('./form-dao.js');
 var RecordDao = require('./record-dao.js');
 var RecordDaoRaw = require('./record-dao-raw.js');
 
