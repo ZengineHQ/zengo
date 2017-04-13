@@ -3,7 +3,7 @@
 var map = require('lodash.map');
 var FormRecord = require('./zn-form-record.js');
 
-var createFormRecordDao = function(formDao, recordDao, formId) {
+var RecordDao = function(formDao, recordDaoRaw, formId) {
 	var dao = {};
 
 	var getForm = function() {
@@ -11,7 +11,7 @@ var createFormRecordDao = function(formDao, recordDao, formId) {
 	};
 
 	dao.get = function(request) {
-		return recordDao.get(request);
+		return recordDaoRaw.get(request);
 	};
 
 	dao.query = function(request) {
@@ -25,17 +25,17 @@ var createFormRecordDao = function(formDao, recordDao, formId) {
 				return response;
 			};
 
-			return recordDao.query(request).then(createFormRecords);
+			return recordDaoRaw.query(request).then(createFormRecords);
 		};
 
 		return getForm().then(queryRecords);
 	};
 
 	dao.save = function(request) {
-		return recordDao.save(request);
+		return recordDaoRaw.save(request);
 	};
 
 	return dao;
 };
 
-module.exports = createFormRecordDao;
+module.exports = RecordDao;

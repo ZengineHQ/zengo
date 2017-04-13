@@ -1,6 +1,6 @@
 'use strict';
 
-var ZnRecordDao = function(znApi, formId) {
+var RecordDaoRaw = function(znApi, formId) {
 
 	var dao = {};
 
@@ -33,4 +33,4 @@ var ZnRecordDao = function(znApi, formId) {
 	return dao;
 };
 
-module.exports = ZnRecordDao;
+module.exports = RecordDaoRaw;

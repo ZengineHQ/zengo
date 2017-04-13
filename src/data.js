@@ -2,8 +2,8 @@
 
 var createApi = require('./zn-api.js');
 var FormDao = require('./zn-form-dao.js');
-var FormRecordDao = require('./zn-record-service.js');
-var RecordDao = require('./zn-record-dao.js');
+var RecordDao = require('./record-dao.js');
+var RecordDaoRaw = require('./record-dao-raw.js');
 
 var createDataModule = function(znHttp) {
 	var module = {};
@@ -15,7 +15,7 @@ var createDataModule = function(znHttp) {
 	};
 
 	module.forRecordsOf = function(formId) {
-		return FormRecordDao(formDao, RecordDao(api, formId), formId);
+		return RecordDao(formDao, RecordDaoRaw(api, formId), formId);
 	};
 
 	return module;
