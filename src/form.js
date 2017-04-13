@@ -2,7 +2,7 @@
 
 var find = require('lodash.find');
 var map = require('lodash.map');
-var createField = require('./zn-field.js');
+var createField = require('./field.js');
 var ZnAttribute = require('./zn-attribute.js');
 
 var createForm = function(data) {

@@ -1,7 +1,6 @@
 'use strict';
 
 var get = require('lodash.get');
-var createField = require('./zn-field.js');
 
 var createFieldDefault = function(data) {
 	var field = {};
