@@ -3,7 +3,7 @@
 var find = require('lodash.find');
 var map = require('lodash.map');
 var createField = require('./field.js');
-var ZnAttribute = require('./zn-attribute.js');
+var Attr = require('./attribute.js');
 
 var createForm = function(data) {
 	var form = {};
@@ -20,7 +20,7 @@ var createForm = function(data) {
 	};
 
 	form.getFieldByAttribute = function(attribute) {
-		var fieldId = ZnAttribute.getFieldId(attribute);
+		var fieldId = Attr.getFieldId(attribute);
 		return find(fields, function(field) {
 			return field.getId() === fieldId;
 		});

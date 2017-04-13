@@ -1,7 +1,7 @@
 'use strict';
 
 var map = require('lodash.map');
-var ZnAttribute = require('./zn-attribute.js');
+var Attr = require('./attribute.js');
 
 
 var createRecord = function(form, data) {
@@ -44,7 +44,7 @@ var createRecord = function(form, data) {
 	};
 
 	formRecord.getAttributeValue = function(attribute) {
-		if (ZnAttribute.isField(attribute)) {
+		if (Attr.isField(attribute)) {
 			return getAttributeValueField(attribute);
 		}
 		return getAttributeValueStd(attribute);

@@ -1,6 +1,6 @@
 'use strict';
 
-var ZnAttribute = {
+var Attribute = {
 	isField: function(attribute) {
 		return /^field[0-9]+/.test(attribute);
 	},
@@ -12,4 +12,4 @@ var ZnAttribute = {
 	}
 };
 
-module.exports = ZnAttribute;
+module.exports = Attribute;
