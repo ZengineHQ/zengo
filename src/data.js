@@ -6,19 +6,19 @@ var RecordDao = require('./record-dao.js');
 var RecordDaoRaw = require('./record-dao-raw.js');
 
 var createDataModule = function(znHttp) {
-	var module = {};
+	var data = {};
 	var api = createApi(znHttp);
 	var formDao = FormDao(api);
 
-	module.forForms = function() {
+	data.forForms = function() {
 		return formDao;
 	};
 
-	module.forRecordsOf = function(formId) {
+	data.forRecordsOf = function(formId) {
 		return RecordDao(formDao, RecordDaoRaw(api, formId), formId);
 	};
 
-	return module;
+	return data;
 };
 
 module.exports = createDataModule;
