@@ -5,38 +5,22 @@ var Promise = require('bluebird');
 var httpFakeForm = require('./zn-http-fake-form.js');
 var httpFakeRecord = require('./zn-http-fake-record.js');
 
-var createZnFake = function() {
-	var znFake = {
-		formDao: httpFakeForm(),
-		recordDao: httpFakeRecord()
-	};
-
-	znFake.forResource = function(name) {
-		if (name === 'form') {
-			return znFake.formDao;
-		}
-		if (name === 'record') {
-			return znFake.recordDao;
-		}
-	};
-
-	return znFake;
-};
-
 var createZnHttpFake = function() {
 	var znHttp = {};
-	var zn = createZnFake();
+
+	var fakeFormRepo = httpFakeForm();
+	var fakeRecordRepo = httpFakeRecord();
 
 	var dispatchGetFormOrRecord = function(tokens, params) {
 		if (!tokens.length) {
-			return zn.forResource('form').query(params);
+			return fakeFormRepo.query(params);
 		}
 		var formId = parseInt(tokens[0]);
 		if (tokens.length === 1) {
-			return zn.forResource('form').get(formId);
+			return fakeFormRepo.get(formId);
 		}
 		if (tokens.length === 2) {
-			return zn.forResource('record').forForm(formId).query();
+			return fakeRecordRepo.forForm(formId).query();
 		}
 	};
 
@@ -52,14 +36,14 @@ var createZnHttpFake = function() {
 
 	var dispatchPostFormOrRecord = function(tokens, data) {
 		if (!tokens.length) {
-			return zn.forResource('form').save(data);
+			return fakeFormRepo.save(data);
 		}
 		var formId = parseInt(tokens[0]);
 		if (tokens.length === 1) {
 			return;
 		}
 		if (tokens.length === 2) {
-			return zn.forResource('record').forForm(formId).save(data);
+			return fakeRecordRepo.forForm(formId).save(data);
 		}
 	};
 
