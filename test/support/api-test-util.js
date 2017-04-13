@@ -6,7 +6,7 @@ var ZnHttp = require('../../lib/zn-http.js');
 
 var Api = require('../../src/api.js');
 
-var instantiateZnHttp = function() {
+var createZnHttp = function() {
 	var options = {
 		headers: {}
 	};
@@ -15,7 +15,7 @@ var instantiateZnHttp = function() {
 };
 
 var createApi = function() {
-	var znHttp = instantiateZnHttp();
+	var znHttp = createZnHttp();
 	return Api(znHttp);
 };
 

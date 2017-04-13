@@ -4,27 +4,12 @@ describe('Api', function() {
 
 	var nock = require('nock');
 
-	var createApi = require('../src/api.js');
-	var ZnHttp = require('../lib/zn-http.js');
+	var util = require('./support/api-test-util.js');
 
 	var api;
 
-	var znHttpWorkaround = function() {
-		var options = {
-			headers: {}
-		};
-		ZnHttp(options).parseHeaders();
-	};
-
-	var setupTest = function() {
-		znHttpWorkaround();
-	};
-
-	setupTest();
-
 	beforeEach(function() {
-		var znHttp = new ZnHttp();
-		api = createApi(znHttp);
+		api = util.createApi();
 	});
 
 	describe('get', function () {
