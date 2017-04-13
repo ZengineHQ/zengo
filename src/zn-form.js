@@ -1,61 +1,28 @@
 'use strict';
 
-var assign = require('lodash.assign');
-var forEach = require('lodash.foreach');
+var find = require('lodash.find');
 var map = require('lodash.map');
-var filter = require('lodash.filter');
+var createField = require('./zn-field.js');
+var ZnAttribute = require('./zn-attribute.js');
 
-var ZnForm = function(data) {
-	assign(this, data);
-	this.fields = this.fields || [];
-};
+var createForm = function(data) {
+	var form = {};
+	var fields = map(data.fields || [], function(fieldData) {
+		return createField(fieldData);
+	});
 
-ZnForm.prototype.getRequiredFields = function() {
-
-	var filter = function(field) {
-		return field.settings.validation.required;
+	form.getId = function() {
+		return data.id;
 	};
 
-	return this.filterFields(filter);
-};
-
-ZnForm.prototype.getFieldsOfTypes = function(eligibleTypes) {
-
-	var isEligible = function(field) {
-		return eligibleTypes.indexOf(field.type) !== -1;
+	form.getFieldByAttribute = function(attribute) {
+		var fieldId = ZnAttribute.getFieldId(attribute);
+		return find(fields, function(field) {
+			return field.getId() === fieldId;
+		});
 	};
 
-	return this.filterFields(isEligible);
+	return form;
 };
 
-ZnForm.prototype.filterFields = function(filter) {
-	var fields = [];
-
-	if (this.fields) {
-		fields = this.fields.filter(filter);
-	}
-
-	return fields;
-};
-
-ZnForm.prototype.getLinkedFormIds = function(linkType) {
-
-	var targetLinkedForms = this.filterLinkedFormsByLinkType(linkType);
-
-	return map(targetLinkedForms, function(linkedForm) {
-		return linkedForm.form.id;
-	});
-};
-
-ZnForm.prototype.filterLinkedFormsByLinkType = function(linkType) {
-
-	if (!linkType) {
-		return this.linkedForms;
-	}
-
-	return filter(this.linkedForms, function(linkedForm) {
-		return linkedForm.type === linkType;
-	});
-};
-
-module.exports = ZnForm;
+module.exports = createForm;

@@ -4,7 +4,6 @@ describe('ZnFormDao', function() {
 
 	var util = require('./zn-api-test-util.js');
 
-	var ZnForm = require('../src/zn-form.js');
 	var ZnFormDao = require('../src/zn-form-dao.js');
 
 	var znFormDao;
@@ -21,19 +20,14 @@ describe('ZnFormDao', function() {
 
 		it('should call api and return instance of ZnForm', function() {
 
-			var expectedForm = {
-				id: 123
-			};
-
 			znNock.get('/forms/123').reply(200, {
-				data: expectedForm
+				data: {
+					id: 123
+				}
 			});
 
 			return znFormDao.get(123).then(function(form) {
-
-				expect(form.id).to.equal(expectedForm.id);
-
-				expect(form instanceof ZnForm).to.equal(true);
+				expect(form.getId()).to.equal(123);
 			});
 		});
 	});
@@ -65,11 +59,8 @@ describe('ZnFormDao', function() {
 				expect(response.data).to.exist;
 				expect(response.data.length).to.equal(2);
 
-				expect(response.data[0].id).to.equal(5);
-				expect(response.data[0] instanceof ZnForm).to.equal(true);
-
-				expect(response.data[1].id).to.equal(6);
-				expect(response.data[1] instanceof ZnForm).to.equal(true);
+				expect(response.data[0].getId()).to.equal(5);
+				expect(response.data[1].getId()).to.equal(6);
 			});
 		});
 	});
