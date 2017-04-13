@@ -16,12 +16,6 @@ var fakeDaoFor = function(formId) {
 		_records.push(data);
 	};
 
-	dao.saveAll = function(records) {
-		_records = map(records, function(record) {
-			return record.serialize();
-		});
-	};
-
 	return dao;
 };
 

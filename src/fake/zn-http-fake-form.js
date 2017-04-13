@@ -36,12 +36,6 @@ var fakeDao = function() {
 		_forms.push(data);
 	};
 
-	formDao.saveAll = function(forms) {
-		_forms = map(forms, function(form) {
-			return form.serialize();
-		});
-	};
-
 	return formDao;
 };
 
