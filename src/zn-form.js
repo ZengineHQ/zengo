@@ -15,6 +15,10 @@ var createForm = function(data) {
 		return data.id;
 	};
 
+	form.getName = function() {
+		return data.name;
+	};
+
 	form.getFieldByAttribute = function(attribute) {
 		var fieldId = ZnAttribute.getFieldId(attribute);
 		return find(fields, function(field) {

@@ -32,6 +32,10 @@ var fakeDao = function() {
 		return _forms;
 	};
 
+	formDao.save = function(data) {
+		_forms.push(data);
+	};
+
 	formDao.saveAll = function(forms) {
 		_forms = map(forms, function(form) {
 			return form.serialize();

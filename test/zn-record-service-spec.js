@@ -17,6 +17,14 @@ describe('ZnRecordService', function() {
 	describe('query', function() {
 		it('should query form records', function() {
 
+			var saveForm = function() {
+				var form = {
+					id: 7,
+					name: 'Fruits',
+				};
+				return formDao.save(form);
+			};
+
 			var saveRecords = function() {
 				return recordDao.save({
 					name: 'apples',
@@ -35,9 +43,11 @@ describe('ZnRecordService', function() {
 				expect(response.totalCount).to.equal(2);
 				expect(response.data[0].getName()).to.eql('apples');
 				expect(response.data[1].getName()).to.eql('bananas');
+				expect(response.data[0].getForm().getName()).to.eql('Fruits');
+				expect(response.data[1].getForm().getName()).to.eql('Fruits');
 			};
 
-			return saveRecords().then(query).then(assert);
+			return saveForm().then(saveRecords).then(query).then(assert);
 		});
 	});
 });

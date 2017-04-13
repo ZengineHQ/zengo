@@ -14,6 +14,10 @@ var createFormRecord = function(form, record) {
 		return record.name;
 	};
 
+	formRecord.getForm = function() {
+		return form;
+	};
+
 	formRecord.getAttributeValues = function(attributes) {
 		return map(attributes, function(attribute) {
 			return formRecord.getAttributeValue(attribute);

@@ -6,13 +6,8 @@ var FormRecord = require('./zn-form-record.js');
 var createFormRecordDao = function(formDao, recordDao, formId) {
 	var dao = {};
 
-	var createFormRecord = function(record) {
-		return FormRecord(null, record);
-	};
-
-	var createFormRecords = function(response) {
-		response.data = map(response.data, createFormRecord);
-		return response;
+	var getForm = function() {
+		return formDao.get(formId);
 	};
 
 	dao.get = function(request) {
@@ -20,7 +15,20 @@ var createFormRecordDao = function(formDao, recordDao, formId) {
 	};
 
 	dao.query = function(request) {
-		return recordDao.query(request).then(createFormRecords);
+
+		var queryRecords = function(form) {
+
+			var createFormRecords = function(response) {
+				response.data = map(response.data, function(record) {
+					return FormRecord(form, record);
+				});
+				return response;
+			};
+
+			return recordDao.query(request).then(createFormRecords);
+		};
+
+		return getForm().then(queryRecords);
 	};
 
 	dao.save = function(request) {
@@ -29,6 +37,5 @@ var createFormRecordDao = function(formDao, recordDao, formId) {
 
 	return dao;
 };
-
 
 module.exports = createFormRecordDao;
