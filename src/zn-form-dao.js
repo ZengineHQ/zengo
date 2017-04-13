@@ -2,37 +2,28 @@
 
 var map = require('lodash.map');
 
-var ZnForm = require('./zn-form.js');
-
-var ZnFormDao = function(znApi) {
-	this.znApi = znApi;
-	this.baseEndpoint = '/forms';
-};
-
-var instantiateZnForm = function(data) {
-	return new ZnForm(data);
-};
-
-var instantiateZnForms = function(response) {
-
-	response.data = map(response.data, instantiateZnForm);
-
+var createForm = require('./zn-form.js');
+var createForms = function(response) {
+	response.data = map(response.data, createForm);
 	return response;
 };
 
-ZnFormDao.prototype.get = function(formId) {
+var ZnFormDao = function(znApi) {
+	var dao = {};
+	var baseEndpoint = '/forms';
 
-	var endpoint = this.baseEndpoint + '/' + formId;
+	dao.get = function(formId) {
+		var endpoint = baseEndpoint + '/' + formId;
+		return znApi.get(endpoint).then(createForm);
+	};
 
-	return this.znApi.get(endpoint).then(instantiateZnForm);
-};
+	dao.query = function(params) {
+		params.attributes = 'id,name';
+		params.related = 'fields,folders';
+		return znApi.query(baseEndpoint, params).then(createForms);
+	};
 
-ZnFormDao.prototype.query = function(params) {
-
-	params.attributes = 'id,name';
-	params.related = 'fields,folders';
-
-	return this.znApi.query(this.baseEndpoint, params).then(instantiateZnForms);
+	return dao;
 };
 
 module.exports = ZnFormDao;

@@ -11,7 +11,7 @@ describe('ZnFormDao', function() {
 
 	beforeEach(function() {
 		var znApi = util.ZnApi();
-		znFormDao = new ZnFormDao(znApi);
+		znFormDao = ZnFormDao(znApi);
 
 		znNock = util.ZnNock();
 	});
