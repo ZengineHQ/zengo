@@ -18,7 +18,7 @@ describe('ZnFormDao', function() {
 
 	describe('get', function () {
 
-		it('should call api and return instance of ZnForm', function() {
+		it('should call api and return form object', function() {
 
 			znNock.get('/forms/123').reply(200, {
 				data: {
@@ -62,6 +62,33 @@ describe('ZnFormDao', function() {
 				expect(response.data[0].getId()).to.equal(5);
 				expect(response.data[1].getId()).to.equal(6);
 			});
+		});
+	});
+
+	describe('save', function() {
+		it('should create form and return form object', function() {
+
+			znNock.post('/forms', {
+				field123: 'apples'
+			})
+				.reply(200, {
+					data: {
+						id: 1,
+						saved: true
+					}
+				});
+
+			var form = {
+				field123: 'apples'
+			};
+
+			return znFormDao.save(form)
+				.then(function(response) {
+					expect(response).to.eql({
+						id: 1,
+						saved: true
+					});
+				});
 		});
 	});
 });

@@ -23,6 +23,10 @@ var ZnFormDao = function(znApi) {
 		return znApi.query(baseEndpoint, params).then(createForms);
 	};
 
+	dao.save = function(data) {
+		return znApi.post(baseEndpoint, data);
+	};
+
 	return dao;
 };
 

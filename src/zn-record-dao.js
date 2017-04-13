@@ -22,12 +22,12 @@ var ZnRecordDao = function(znApi, formId) {
 		return znApi.query(endpoint, request);
 	};
 
-	dao.save = function(record) {
-		var endpoint = getEndpoint(record.id);
-		if (record.id) {
-			return znApi.put(endpoint, record);
+	dao.save = function(request) {
+		var endpoint = getEndpoint(request.id);
+		if (request.id) {
+			return znApi.put(endpoint, request);
 		}
-		return znApi.post(endpoint, record);
+		return znApi.post(endpoint, request);
 	};
 
 	return dao;
