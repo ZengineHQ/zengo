@@ -32,7 +32,7 @@
     "test": "test"
   },
   "scripts": {
-    "codesmell": "jshint test test-integration src index.js",
+    "codesmell": "jshint test src index.js",
     "lint": "npm run codesmell -s",
     "test": "mocha --reporter min --require test/support/mocha.js",
     "test:watch": "watch 'npm run test -s'",

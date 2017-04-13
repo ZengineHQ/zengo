@@ -1,8 +1,5 @@
 'use strict';
 
-var map = require('lodash.map');
-var merge = require('lodash.merge');
-
 var ZnRecordDao = function(znApi, formId) {
 
 	var dao = {};
