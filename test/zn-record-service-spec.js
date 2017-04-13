@@ -33,8 +33,8 @@ describe('ZnRecordService', function() {
 
 			var assert = function(response) {
 				expect(response.totalCount).to.equal(2);
-				expect(response.data[0].name).to.eql('apples');
-				expect(response.data[1].name).to.eql('bananas');
+				expect(response.data[0].getName()).to.eql('apples');
+				expect(response.data[1].getName()).to.eql('bananas');
 			};
 
 			return saveRecords().then(query).then(assert);
