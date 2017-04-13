@@ -8,26 +8,20 @@ var ZnApi = require('../src/zn-api.js');
 var ZnFactory = require('../src/zn-factory.js');
 
 var instantiateZnHttp = function() {
-
 	var options = {
 		headers: {}
 	};
 	ZnHttp(options).parseHeaders();
-
 	return new ZnHttp();
 };
 
 var instantiateZnApi = function() {
-
 	var znHttp = instantiateZnHttp();
-
-	return new ZnApi(znHttp);
+	return ZnApi(znHttp);
 };
 
 var instantiateZnFactory = function() {
-
 	var znHttp = instantiateZnHttp();
-
 	return new ZnFactory(znHttp);
 };
 

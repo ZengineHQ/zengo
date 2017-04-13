@@ -24,7 +24,7 @@ describe('ZnApi', function() {
 
 	beforeEach(function() {
 		var znHttp = new ZnHttp();
-		znApi = new ZnApi(znHttp);
+		znApi = ZnApi(znHttp);
 	});
 
 	describe('get', function () {

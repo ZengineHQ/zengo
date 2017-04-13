@@ -7,7 +7,7 @@ var ZnRecordService = require('./zn-record-service.js');
 
 var ZnFactory = function(znHttp) {
 	this.znHttp = znHttp;
-	this.znApi = new ZnApi(znHttp);
+	this.znApi = ZnApi(znHttp);
 };
 
 ZnFactory.prototype.ZnFormDao = function() {
