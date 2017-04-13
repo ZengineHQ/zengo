@@ -7,6 +7,11 @@ The project should also be a place of discussion, where any developer can collab
 
 # Install
 For now, reference the github url in your package.json.
+```json
+"dependencies": {
+    "zengo": "git://github.com/WizeHive/zengo"
+ },
+```
 
 # Contribute
 
