@@ -8,6 +8,10 @@ The project should also be a place of discussion, where any developer can collab
 # Install
 For now, reference the github url in your package.json.
 
+# Contribute
+
+See the [contributing](CONTRIBUTING.md) doc.
+
 # Data
 
 ```js
