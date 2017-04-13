@@ -1,7 +1,7 @@
 'use strict';
 
 var map = require('lodash.map');
-var FormRecord = require('./zn-form-record.js');
+var Record = require('./record.js');
 
 var RecordDao = function(formDao, recordDaoRaw, formId) {
 	var dao = {};
@@ -20,7 +20,7 @@ var RecordDao = function(formDao, recordDaoRaw, formId) {
 
 			var createFormRecords = function(response) {
 				response.data = map(response.data, function(record) {
-					return FormRecord(form, record);
+					return Record(form, record);
 				});
 				return response;
 			};

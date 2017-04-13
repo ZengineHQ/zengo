@@ -1,6 +1,6 @@
 'use strict';
 
-describe('ZnRecordService', function() {
+describe('RecordDao', function() {
 
 	var zengo = require('../index.js');
 

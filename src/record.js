@@ -3,15 +3,16 @@
 var map = require('lodash.map');
 var ZnAttribute = require('./zn-attribute.js');
 
-var createFormRecord = function(form, record) {
+
+var createRecord = function(form, data) {
 	var formRecord = {};
 
 	formRecord.getId = function() {
-		return record.id;
+		return data.id;
 	};
 
 	formRecord.getName = function() {
-		return record.name;
+		return data.name;
 	};
 
 	formRecord.getForm = function() {
@@ -26,7 +27,7 @@ var createFormRecord = function(form, record) {
 
 	var getAttributeValueField = function(attribute) {
 		var field = form.getFieldByAttribute(attribute);
-		var value = record[attribute];
+		var value = data[attribute];
 		return {
 			field: field,
 			attribute: attribute,
@@ -35,7 +36,7 @@ var createFormRecord = function(form, record) {
 	};
 
 	var getAttributeValueStd = function(attribute) {
-		var value = record[attribute];
+		var value = data[attribute];
 		return {
 			attribute: attribute,
 			value: value
@@ -50,7 +51,7 @@ var createFormRecord = function(form, record) {
 	};
 
 	formRecord.getFieldValue = function(fieldId) {
-		return record['field' + fieldId];
+		return data['field' + fieldId];
 	};
 
 	formRecord.getParentIdForRelation = function(linkedForm) {
@@ -62,10 +63,10 @@ var createFormRecord = function(form, record) {
 	};
 
 	formRecord.serialize = function() {
-		return record;
+		return data;
 	};
 
 	return formRecord;
 };
 
-module.exports = createFormRecord;
+module.exports = createRecord;
