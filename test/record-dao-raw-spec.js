@@ -2,7 +2,7 @@
 
 describe('RecordDaoRaw', function() {
 
-	var util = require('./api-test-util.js');
+	var util = require('./support/api-test-util.js');
 
 	var RecordDaoRaw = require('../src/record-dao-raw.js');
 

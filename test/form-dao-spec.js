@@ -2,7 +2,7 @@
 
 describe('FormDao', function() {
 
-	var util = require('./api-test-util.js');
+	var util = require('./support/api-test-util.js');
 
 	var FormDao = require('../src/form-dao.js');
 
