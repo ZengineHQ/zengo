@@ -1,7 +1,6 @@
 'use strict';
 
 var reduce = require('lodash.reduce');
-var isArray = require('lodash.isarray');
 var isObject = require('lodash.isobject');
 var forEach = require('lodash.foreach');
 
@@ -12,7 +11,7 @@ var createApi = function(znHttp) {
 	var assembleParams = function(params) {
 
 		return reduce(params, function(assembled, paramValue, paramKey) {
-			if (isArray(paramValue)) {
+			if (Array.isArray(paramValue)) {
 				paramValue = paramValue.join('|');
 				assembled[paramKey] = paramValue;
 				return assembled;

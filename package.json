@@ -11,7 +11,6 @@
     "lodash.foreach": "^4.0.0",
     "lodash.get": "^4.1.0",
     "lodash.includes": "^4.3.0",
-    "lodash.isarray": "^4.0.0",
     "lodash.isempty": "^4.1.1",
     "lodash.isobject": "^3.0.2",
     "lodash.isstring": "^4.0.1",
