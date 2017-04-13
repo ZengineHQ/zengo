@@ -1,0 +1,41 @@
+{
+  "name": "zengo",
+  "version": "0.0.1",
+  "dependencies": {
+    "bluebird": "^3.0.5",
+    "lodash.assign": "^4.0.2",
+    "lodash.chunk": "^4.0.1",
+    "lodash.create": "^4.0.1",
+    "lodash.filter": "^4.1.0",
+    "lodash.foreach": "^4.0.0",
+    "lodash.get": "^4.1.0",
+    "lodash.isarray": "^4.0.0",
+    "lodash.isempty": "^4.1.1",
+    "lodash.isobject": "^3.0.2",
+    "lodash.isstring": "^4.0.1",
+    "lodash.map": "^4.1.0",
+    "lodash.merge": "^4.1.0",
+    "lodash.reduce": "^4.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.2.0",
+    "jshint": "^2.8.0",
+    "mocha": "^2.4.5",
+    "nock": "^3.1.0",
+    "requestify": "^0.1.17",
+    "watch": "^0.16.0"
+  },
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "codesmell": "jshint test test-integration src index.js",
+    "lint": "npm run codesmell -s",
+    "test": "mocha --reporter min --require test/support/mocha.js",
+    "test:watch": "watch 'npm run test -s'",
+    "watch": "watch 'npm run test -s || npm run lint -s'"
+  },
+  "private": true
+}
