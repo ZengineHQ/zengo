@@ -2,58 +2,42 @@
 
 describe('ZnRecordService', function() {
 
-	var nock = require('nock');
-	var util = require('./zn-api-test-util.js');
+	var zengo = require('../index.js');
 
-	var znRecordService;
-	var znNock;
+	var formDao;
+	var recordDao;
 
 	beforeEach(function() {
-		var znFactory = util.ZnFactory();
-		znRecordService = znFactory.ZnRecordService();
-		znNock = util.ZnNock();
+		var znHttpFake = zengo.znHttpFake();
+		var data = zengo.data(znHttpFake);
+		formDao = data.forForms();
+		recordDao = data.forRecordsOf(7);
 	});
 
-	describe('GET requests', function() {
+	describe('query', function() {
+		it('should query form records', function() {
 
-		var resources;
-
-		beforeEach(function() {
-
-			resources = [
-				{ id: 1 },
-				{ id: 2 }
-			];
-
-			nock('https://api.zenginehq.com')
-				.filteringPath(function(path){
-					return '/';
-				})
-				.get('/')
-				.reply(200, function(uri, requestBody) {
-					return {
-						data: resources
-					};
+			var saveRecords = function() {
+				return recordDao.save({
+					name: 'apples',
+				}).then(function() {
+					recordDao.save({
+						name: 'bananas'
+					});
 				});
+			};
+
+			var query = function() {
+				return recordDao.query();
+			};
+
+			var assert = function(response) {
+				expect(response.totalCount).to.equal(2);
+				expect(response.data[0].name).to.eql('apples');
+				expect(response.data[1].name).to.eql('bananas');
+			};
+
+			return saveRecords().then(query).then(assert);
 		});
-
-		// describe('findByFieldValue', function() {
-
-		// 	it('should', function() {
-
-		// 		var request = {
-		// 			formId: 7,
-		// 			fieldId: 123,
-		// 			value: 'apples'
-		// 		};
-
-		// 		var assert = function(resource) {
-		// 			expect(resource.id).to.equal(resources[0].id);
-		// 		};
-
-		// 		return znRecordService.findByFieldValue(request)
-		// 			.then(assert);
-		// 	});
-		// });
 	});
 });

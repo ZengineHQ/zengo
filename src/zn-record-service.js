@@ -1,19 +1,22 @@
 'use strict';
 
-var ZnRecordService = function(znRecordDao) {
-	this.znRecordDao = znRecordDao;
+var createFormRecordDao = function(formDao, recordDao, formId) {
+	var dao = {};
+
+	dao.get = function(request) {
+		return recordDao.get(request);
+	};
+
+	dao.query = function(request) {
+		return recordDao.query(request);
+	};
+
+	dao.save = function(request) {
+		return recordDao.save(request);
+	};
+
+	return dao;
 };
 
-ZnRecordService.prototype.get = function(request) {
-	return this.znRecordDao.get(request);
-};
 
-ZnRecordService.prototype.query = function(request) {
-	return this.znRecordDao.query(request);
-};
-
-ZnRecordService.prototype.save = function(request) {
-	return this.znRecordDao.save(request);
-};
-
-module.exports = ZnRecordService;
+module.exports = createFormRecordDao;
