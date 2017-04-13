@@ -4,7 +4,7 @@ var nock = require('nock');
 
 var ZnHttp = require('../lib/zn-http.js');
 
-var ZnApi = require('../src/zn-api.js');
+var Api = require('../src/api.js');
 
 var instantiateZnHttp = function() {
 	var options = {
@@ -14,9 +14,9 @@ var instantiateZnHttp = function() {
 	return new ZnHttp();
 };
 
-var instantiateZnApi = function() {
+var createApi = function() {
 	var znHttp = instantiateZnHttp();
-	return ZnApi(znHttp);
+	return Api(znHttp);
 };
 
 var nockOnZengineApi = function() {
@@ -24,6 +24,6 @@ var nockOnZengineApi = function() {
 };
 
 module.exports = {
-	ZnApi: instantiateZnApi,
+	createApi: createApi,
 	ZnNock: nockOnZengineApi
 };

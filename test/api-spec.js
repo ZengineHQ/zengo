@@ -1,13 +1,13 @@
 'use strict';
 
-describe('ZnApi', function() {
+describe('Api', function() {
 
 	var nock = require('nock');
 
-	var ZnApi = require('../src/zn-api.js');
+	var createApi = require('../src/api.js');
 	var ZnHttp = require('../lib/zn-http.js');
 
-	var znApi;
+	var api;
 
 	var znHttpWorkaround = function() {
 		var options = {
@@ -24,7 +24,7 @@ describe('ZnApi', function() {
 
 	beforeEach(function() {
 		var znHttp = new ZnHttp();
-		znApi = ZnApi(znHttp);
+		api = createApi(znHttp);
 	});
 
 	describe('get', function () {
@@ -46,7 +46,7 @@ describe('ZnApi', function() {
 					data: expectedRecords
 				});
 
-			return znApi.get('/forms/123/records').then(function(records) {
+			return api.get('/forms/123/records').then(function(records) {
 				expect(records).to.eql(expectedRecords);
 			});
 		});
@@ -69,7 +69,7 @@ describe('ZnApi', function() {
 				field200: 'apples'
 			};
 
-			return znApi.get('/forms/1/records', params);
+			return api.get('/forms/1/records', params);
 		});
 	});
 
@@ -94,7 +94,7 @@ describe('ZnApi', function() {
 				.get('/forms/123/records')
 				.reply(200, expectedResponse);
 
-			return znApi.query('/forms/123/records').then(function(response) {
+			return api.query('/forms/123/records').then(function(response) {
 				expect(response).to.eql(expectedResponse);
 			});
 		});
@@ -117,7 +117,7 @@ describe('ZnApi', function() {
 				field200: 'apples'
 			};
 
-			return znApi.query('/forms/1/records', params);
+			return api.query('/forms/1/records', params);
 		});
 
 		it('should assemble params, so object values are flattened', function() {
@@ -139,7 +139,7 @@ describe('ZnApi', function() {
 				}
 			};
 
-			return znApi.query('/forms/1/records', params);
+			return api.query('/forms/1/records', params);
 		});
 
 		describe('when no results were found (i.e. totalCount is 0)', function() {
@@ -169,7 +169,7 @@ describe('ZnApi', function() {
 					data: []
 				};
 
-				return znApi.query('/forms/1/records').then(function(response) {
+				return api.query('/forms/1/records').then(function(response) {
 					expect(response).to.eql(expectedResponse);
 				});
 			});
@@ -192,7 +192,7 @@ describe('ZnApi', function() {
 					.get('/')
 					.reply(200, expectedResponse);
 
-				return znApi.query('/forms/1/records').then(function(response) {
+				return api.query('/forms/1/records').then(function(response) {
 					expect(response).to.eql(expectedResponse);
 				});
 			});
@@ -214,7 +214,7 @@ describe('ZnApi', function() {
 					data: record
 				});
 
-			return znApi.post('/forms/123/records', record).then(function(data) {
+			return api.post('/forms/123/records', record).then(function(data) {
 				expect(data).to.eql(record);
 			});
 		});
@@ -235,7 +235,7 @@ describe('ZnApi', function() {
 					data: record
 				});
 
-			return znApi.put('/forms/123/records/456', record).then(function(data) {
+			return api.put('/forms/123/records/456', record).then(function(data) {
 				expect(data).to.eql(record);
 			});
 		});

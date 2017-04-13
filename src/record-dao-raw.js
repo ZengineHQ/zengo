@@ -1,6 +1,6 @@
 'use strict';
 
-var RecordDaoRaw = function(znApi, formId) {
+var RecordDaoRaw = function(api, formId) {
 
 	var dao = {};
 
@@ -14,20 +14,20 @@ var RecordDaoRaw = function(znApi, formId) {
 
 	dao.get = function(request) {
 		var endpoint = getEndpoint(request.id);
-		return znApi.get(endpoint);
+		return api.get(endpoint);
 	};
 
 	dao.query = function(request) {
 		var endpoint = getEndpoint();
-		return znApi.query(endpoint, request);
+		return api.query(endpoint, request);
 	};
 
 	dao.save = function(request) {
 		var endpoint = getEndpoint(request.id);
 		if (request.id) {
-			return znApi.put(endpoint, request);
+			return api.put(endpoint, request);
 		}
-		return znApi.post(endpoint, request);
+		return api.post(endpoint, request);
 	};
 
 	return dao;

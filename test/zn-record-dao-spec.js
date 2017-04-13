@@ -2,15 +2,15 @@
 
 describe('RecordDaoRaw', function() {
 
-	var util = require('./zn-api-test-util.js');
+	var util = require('./api-test-util.js');
 
 	var RecordDaoRaw = require('../src/record-dao-raw.js');
 
-	var znApi;
+	var api;
 	var znNock;
 
 	beforeEach(function() {
-		znApi = util.ZnApi();
+		api = util.createApi();
 		znNock = util.ZnNock();
 	});
 
@@ -18,7 +18,7 @@ describe('RecordDaoRaw', function() {
 
 		it('should call GET api and return raw record', function() {
 
-			var recordDaoRaw = RecordDaoRaw(znApi, 7);
+			var recordDaoRaw = RecordDaoRaw(api, 7);
 
 			var apiResponse = {
 				data: {
@@ -48,7 +48,7 @@ describe('RecordDaoRaw', function() {
 
 		it('should call GET api and return raw records', function() {
 
-			var recordDaoRaw = RecordDaoRaw(znApi, 123);
+			var recordDaoRaw = RecordDaoRaw(api, 123);
 
 			var apiResponse = {
 				data: [
@@ -87,7 +87,7 @@ describe('RecordDaoRaw', function() {
 
 			it('should create record and return raw saved record', function() {
 
-				var recordDaoRaw = RecordDaoRaw(znApi, 123);
+				var recordDaoRaw = RecordDaoRaw(api, 123);
 
 				var record = {
 					field123: 'apples'
@@ -122,7 +122,7 @@ describe('RecordDaoRaw', function() {
 
 			it('should update record and return raw saved record', function() {
 
-				var recordDaoRaw = RecordDaoRaw(znApi, 123);
+				var recordDaoRaw = RecordDaoRaw(api, 123);
 
 				var record = {
 					id: 7,

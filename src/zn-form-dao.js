@@ -8,23 +8,23 @@ var createForms = function(response) {
 	return response;
 };
 
-var ZnFormDao = function(znApi) {
+var ZnFormDao = function(api) {
 	var dao = {};
 	var baseEndpoint = '/forms';
 
 	dao.get = function(formId) {
 		var endpoint = baseEndpoint + '/' + formId;
-		return znApi.get(endpoint).then(createForm);
+		return api.get(endpoint).then(createForm);
 	};
 
 	dao.query = function(params) {
 		params.attributes = 'id,name';
 		params.related = 'fields,folders';
-		return znApi.query(baseEndpoint, params).then(createForms);
+		return api.query(baseEndpoint, params).then(createForms);
 	};
 
 	dao.save = function(data) {
-		return znApi.post(baseEndpoint, data);
+		return api.post(baseEndpoint, data);
 	};
 
 	return dao;

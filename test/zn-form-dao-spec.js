@@ -2,7 +2,7 @@
 
 describe('ZnFormDao', function() {
 
-	var util = require('./zn-api-test-util.js');
+	var util = require('./api-test-util.js');
 
 	var ZnFormDao = require('../src/zn-form-dao.js');
 
@@ -10,8 +10,8 @@ describe('ZnFormDao', function() {
 	var znNock;
 
 	beforeEach(function() {
-		var znApi = util.ZnApi();
-		znFormDao = ZnFormDao(znApi);
+		var api = util.createApi();
+		znFormDao = ZnFormDao(api);
 
 		znNock = util.ZnNock();
 	});
