@@ -2,6 +2,7 @@
 
 describe('Router', function() {
 
+	var Promise = require('bluebird');
 	var router;
 
 	var fakeEventData = {
