@@ -2,6 +2,7 @@
 
 describe('Router', function() {
 
+	var Promise = require('bluebird');
 	var router;
 
 	var fakeEventData = {
@@ -65,7 +66,7 @@ describe('Router', function() {
 
 			router.get('/two', testActionTwo);
 
-			router.dispatch(fakeEventData).then(function(results) {
+			return router.dispatch(fakeEventData).then(function(results) {
 				expect(results).to.equal('testGET');
 			});
 
@@ -88,7 +89,7 @@ describe('Router', function() {
 
 			router.post('/two', testActionTwo);
 
-			router.dispatch(fakeEventData).then(function(results) {
+			return router.dispatch(fakeEventData).then(function(results) {
 				expect(results).to.equal('testPOST');
 			});
 

@@ -32,3 +32,7 @@ var recordDao = data.forRecordsOf(form_id = 7);
 ```
 
 You should be able to get forms and records as objects. In zengo, all record objects have a reference to the corresponding form, which is queried implicitly.
+
+# Router
+
+See the [router docs](docs/router.md).
