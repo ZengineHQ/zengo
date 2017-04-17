@@ -2,7 +2,10 @@
 
 var actions = {
 	'GET': {},
-	'POST': {}
+	'POST': {},
+	'PUT': {},
+	'DELETE': {},
+	'PATCH': {}
 };
 
 var registerAction = function(method, action, callback) {
@@ -25,6 +28,18 @@ var registerGetAction = function(action, callback) {
 
 var registerPostAction = function(action, callback) {
 	return registerAction('POST', action, callback);
+};
+
+var registerPutAction = function(action, callback) {
+	return registerAction('PUT', action, callback);
+};
+
+var registerDeleteAction = function(action, callback) {
+	return registerAction('DELETE', action, callback);
+};
+
+var registerPatchAction = function(action, callback) {
+	return registerAction('PATCH', action, callback);
 };
 
 var findCallback = function(method, firstAction) {
@@ -59,6 +74,10 @@ var dispatch = function(eventData) {
 
 	var onError = function(err) {
 
+		if (!err) {
+			err = {};
+		}
+		
 		var status = err.status || 500;
 
 		var payload = {
@@ -99,5 +118,8 @@ var dispatch = function(eventData) {
 module.exports = {
 	get: registerGetAction,
 	post: registerPostAction,
+	put: registerPutAction,
+	delete: registerDeleteAction,
+	patch: registerPatchAction,
 	dispatch: dispatch
 };
