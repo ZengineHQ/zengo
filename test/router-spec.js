@@ -3,8 +3,9 @@
 
 describe('Router', function() {
 
+	var Promise = require('bluebird');
+	
 	var util = require('./support/runner-test-util');
-
 	var router;
 
 	beforeEach(function() {

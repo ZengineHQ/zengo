@@ -83,7 +83,7 @@ var dispatch = function(eventData) {
 		var payload = {
 			name: err.name || 'InternalServerError',
 			message: err.message || 'Internal Server Error'
-		}
+		};
 
 		if (status === 500 && err.stack) {
 			payload.log = err.stack;
@@ -109,7 +109,7 @@ var dispatch = function(eventData) {
 		name: 'NotFound',
 		message: 'Not Found',
 		status: 404
-	}
+	};
 
 	return onError(error);
 
