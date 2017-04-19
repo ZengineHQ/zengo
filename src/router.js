@@ -1,5 +1,7 @@
 'use strict';
 
+var merge = require('lodash.merge');
+
 var actions = {
 	'GET': {},
 	'POST': {},
@@ -74,16 +76,21 @@ var dispatch = function(eventData) {
 
 	var onError = function(err) {
 
-		if (!err) {
-			err = {};
-		}
-		
+		err = err || {};
+
 		var status = err.status || 500;
 
 		var payload = {
-			name: err.name || 'InternalServerError',
-			message: err.message || 'Internal Server Error'
+			name: err.name,
+			message: err.message
 		};
+
+		var defaultPayload = {
+			name: 'InternalServerError',
+			message: 'Internal Server Error'
+		};
+
+		payload = merge(defaultPayload, payload);
 
 		if (status === 500 && err.stack) {
 			payload.log = err.stack;

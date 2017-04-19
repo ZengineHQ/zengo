@@ -1,51 +1,46 @@
 'use strict';
+var mapValues = require('lodash.mapvalues'),
+	method = require('lodash.method'),
+	merge = require('lodash.merge');
 
 
 function convertKeysToLowerCase(map) {
-    var newMap = {};
-    for(var key in map) {
-        newMap[key.toLowerCase()] = map[key];
-    }
-    return newMap;
+	return mapValues(map, method('toLowerCase'));
 }
 
 var createRequest = function(options) {
 
-	if (!options) {
-		var options = {};
+	options = options || {};
+
+	var defaultRequest = {
+		method: 'GET',
+		originalUrl: '/workspaces/123/testService/testEndpoint',
+		headers: {},
+		body: {},
+		query: {},
+		params: {
+			workspaceId: null,
+			pluginNamespace: null,
+			pluginRoute: null
+		}
+	};
+
+
+	var mockRequest = merge(defaultRequest, options);
+
+	var fragments = mockRequest.originalUrl.split('/');
+
+	if (fragments.length >= 4) {
+		mockRequest.params.workspaceId = fragments[1];
+		mockRequest.params.pluginNamespace = fragments[2];
+		mockRequest.params.pluginRoute = fragments[3];
 	}
 
-	var mockRequest = Object.create(null);
+	mockRequest.headers = convertKeysToLowerCase(mockRequest.headers);
 
-	mockRequest.method = options.method ? options.method : 'GET';
-
-    mockRequest.originalUrl = options.originalUrl || '/workspaces/123/testService/testEndpoint';
-    
-    var defaultParams = {
-		workspaceId: null,
-		pluginNamespace: null,
-		pluginRoute: null
-    }
-
-    var fragments = mockRequest.originalUrl.split('/');
-
-    if (fragments.length >= 4) {
-    	defaultParams.workspaceId = fragments[1];
-    	defaultParams.pluginNamespace = fragments[2];
-    	defaultParams.pluginRoute = fragments[3];
-    }
-    
-    mockRequest.params = options.params ? Object.assign(options.params, defaultParams) : defaultParams;
-    
-    mockRequest.headers = options.headers ? convertKeysToLowerCase(options.headers) : {};
-    
-    mockRequest.body = options.body ? options.body : {};
-    
-    mockRequest.query = options.query ? options.query : {};
-    
 	return mockRequest;
 
-}
+};
 
 var createResponse = function(options) {
 
@@ -70,7 +65,7 @@ var createResponse = function(options) {
 
 	return mockResponse;
 
-}
+};
 
 var createEventData = function(request, response) {
 
@@ -87,4 +82,4 @@ var RunnerTestUtil = {
 	createResponse: createResponse
 };
 
-module.exports = RunnerTestUtil
+module.exports = RunnerTestUtil;
