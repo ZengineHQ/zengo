@@ -1,11 +1,12 @@
 'use strict';
-var mapValues = require('lodash.mapvalues'),
-	method = require('lodash.method'),
+var mapKeys = require('lodash.mapkeys'),
 	merge = require('lodash.merge');
 
 
 function convertKeysToLowerCase(map) {
-	return mapValues(map, method('toLowerCase'));
+	return mapKeys(map, function(value, key) {
+		return key.toLowerCase();
+	});
 }
 
 var createRequest = function(options) {
