@@ -6,10 +6,16 @@ The goal of this project is to incorporate all the infrastructural code necessar
 The project should also be a place of discussion, where any developer can collaborate and where code is developed in a consensus-driven way.
 
 # Install
-For now, reference the github url in your package.json.
+
+With npm
+```bash
+npm install git+ssh://git@github.com/WizeHive/zengo --save
+```
+
+Or reference the github url in your package.json.
 ```json
 "dependencies": {
-    "zengo": "git://github.com/WizeHive/zengo"
+    "zengo": "git+ssh://git@github.com/WizeHive/zengo.git"
  },
 ```
 
@@ -32,3 +38,7 @@ var recordDao = data.forRecordsOf(form_id = 7);
 ```
 
 You should be able to get forms and records as objects. In zengo, all record objects have a reference to the corresponding form, which is queried implicitly.
+
+# Router
+
+See the [router docs](docs/router.md).
