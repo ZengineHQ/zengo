@@ -30,11 +30,6 @@ var RecordDaoRaw = function(api, formId) {
 		return api.post(endpoint, request);
 	};
 
-	dao.count = function(request) {
-		var endpoint = getEndpoint();
-		return api.count(endpoint, request);
-	};
-
 	return dao;
 };
 

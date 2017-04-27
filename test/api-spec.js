@@ -12,7 +12,7 @@ describe('Api', function() {
 		api = util.createApi();
 	});
 
-	describe('get', function() {
+	describe('get', function () {
 
 		it('should send GET request and return response data', function() {
 
@@ -58,7 +58,7 @@ describe('Api', function() {
 		});
 	});
 
-	describe('query', function() {
+	describe('query', function () {
 
 		it('should send GET request and return response', function() {
 
@@ -184,7 +184,7 @@ describe('Api', function() {
 		});
 	});
 
-	describe('post', function() {
+	describe('post', function () {
 
 		it('should POST to api and return response data', function() {
 
@@ -205,7 +205,7 @@ describe('Api', function() {
 		});
 	});
 
-	describe('put', function() {
+	describe('put', function () {
 
 		it('should PUT to api and return response data', function() {
 
@@ -224,37 +224,5 @@ describe('Api', function() {
 				expect(data).to.eql(record);
 			});
 		});
-	});
-
-	describe('count', function() {
-
-		it('should GET to api and return the total count', function() {
-
-			var endpoint = '/forms/123/records';
-
-			var totalCount = 1;
-
-			var apiResponse = {
-				status: 200,
-  				code: 2000,
-  				totalCount: totalCount
-			};
-
-			nock('https://api.zenginehq.com/v1')
-				.get('/forms/123/records/count?field123=apples')
-				.reply(200, apiResponse);
-
-			var options = {
-				params: {
-					field123: 'apples'
-				}
-			};
-
-			return api.count('/forms/123/records', options).then(function(results) {
-				expect(results).to.be.equal(totalCount);
-			});
-
-		});
-
 	});
 });

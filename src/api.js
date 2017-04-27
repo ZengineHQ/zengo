@@ -62,14 +62,6 @@ var createApi = function(znHttp) {
 		});
 	};
 
-	api.count = function(endpoint, params) {
-		var returnParsedResponse = function(response) {
-			var body = response.getBody();
-			return body.totalCount || 0;
-		};
-		return znHttp.get(endpoint + '/count', params).then(returnParsedResponse);
-	};
-
 	var returnResponseData = function(response) {
 		return response.getBody().data;
 	};
