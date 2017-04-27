@@ -1,9 +1,10 @@
 'use strict';
 
-var createApi = require('./api.js');
-var FormDao = require('./form-dao.js');
-var RecordDao = require('./record-dao.js');
-var RecordDaoRaw = require('./record-dao-raw.js');
+var createApi = require('./api');
+var FormDao = require('./form-dao');
+var FieldDao = requier('./field-dao');
+var RecordDao = require('./record-dao');
+var RecordDaoRaw = require('./record-dao-raw');
 
 var createDataModule = function(znHttp) {
 	var data = {};
@@ -12,6 +13,10 @@ var createDataModule = function(znHttp) {
 
 	data.forForms = function() {
 		return formDao;
+	};
+
+	data.forFieldsOf = function(formId) {
+		return FieldDao(api, formId);
 	};
 
 	data.forRecordsOf = function(formId) {
