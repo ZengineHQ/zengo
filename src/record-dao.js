@@ -35,7 +35,7 @@ var RecordDao = function(formDao, recordDaoRaw, formId) {
 	};
 
 	dao.count = function(request) {
-		return recordDaoRaw.query(request);
+		return recordDaoRaw.count(request);
 	};
 
 	return dao;
