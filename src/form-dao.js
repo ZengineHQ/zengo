@@ -1,12 +1,5 @@
 'use strict';
 
-var map = require('lodash.map');
-
-var createForms = function(response) {
-	response.data = map(response.data, createForm);
-	return response;
-};
-
 var FormDao = function(api) {
 
 	var dao = {};
