@@ -27,7 +27,7 @@ describe('FormDao', function() {
 			});
 
 			return formDao.get(123).then(function(form) {
-				expect(form.getId()).to.equal(123);
+				expect(form.id).to.equal(123);
 			});
 		});
 	});
@@ -59,8 +59,8 @@ describe('FormDao', function() {
 				expect(response.data).to.exist;
 				expect(response.data.length).to.equal(2);
 
-				expect(response.data[0].getId()).to.equal(5);
-				expect(response.data[1].getId()).to.equal(6);
+				expect(response.data[0].id).to.equal(5);
+				expect(response.data[1].id).to.equal(6);
 			});
 		});
 	});

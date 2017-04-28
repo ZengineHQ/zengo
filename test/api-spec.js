@@ -84,6 +84,27 @@ describe('Api', function() {
 			});
 		});
 
+		it('should assemble params, so array values are separated by `,` when the param name is `related` or `attributes`', function() {
+
+			nock('https://api.zenginehq.com')
+				.filteringPath(function(path){
+					return '/';
+				})
+				.get('/')
+				.reply(200, function(uri, requestBody) {
+					uri = decodeURIComponent(uri);
+					expect(uri).to.equal('/v1/forms?attributes=id,createdAt,field123&related=fields,folders');
+					return {};
+				});
+
+			var params = {
+				attributes: ['id', 'createdAt', 'field123'],
+				related: ['fields', 'folders']
+			};
+
+			return api.query('/forms', params);
+		});
+
 		it('should assemble params, so array values are separated by |', function() {
 
 			nock('https://api.zenginehq.com')

@@ -11,8 +11,15 @@ var createApi = function(znHttp) {
 	var assembleParams = function(params) {
 
 		return reduce(params, function(assembled, paramValue, paramKey) {
+
+			var separator = '|';
+
+			if (paramKey === 'related' || paramKey === 'attributes') {
+				separator = ',';
+			}
+
 			if (Array.isArray(paramValue)) {
-				paramValue = paramValue.join('|');
+				paramValue = paramValue.join(separator);
 				assembled[paramKey] = paramValue;
 				return assembled;
 			}
@@ -25,8 +32,11 @@ var createApi = function(znHttp) {
 			}
 
 			assembled[paramKey] = paramValue;
+
 			return assembled;
+
 		}, {});
+
 	};
 
 	api.get = function(endpoint, params) {

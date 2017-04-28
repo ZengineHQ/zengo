@@ -15,6 +15,7 @@ describe('RecordDao', function() {
 	});
 
 	describe('query', function() {
+
 		it('should query form records', function() {
 
 			var saveForm = function() {
@@ -41,13 +42,14 @@ describe('RecordDao', function() {
 
 			var assert = function(response) {
 				expect(response.totalCount).to.equal(2);
-				expect(response.data[0].getName()).to.eql('apples');
-				expect(response.data[1].getName()).to.eql('bananas');
-				expect(response.data[0].getForm().getName()).to.eql('Fruits');
-				expect(response.data[1].getForm().getName()).to.eql('Fruits');
+				expect(response.data[0].record.name).to.eql('apples');
+				expect(response.data[1].record.name).to.eql('bananas');
+				expect(response.data[0].form.name).to.eql('Fruits');
+				expect(response.data[1].form.name).to.eql('Fruits');
 			};
 
 			return saveForm().then(saveRecords).then(query).then(assert);
 		});
+
 	});
 });
