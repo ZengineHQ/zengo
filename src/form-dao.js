@@ -22,7 +22,7 @@ var FormDao = function(api) {
 	};
 
 	dao.count = function(request) {
-		return api.query(baseEndpoint, request);
+		return api.count(baseEndpoint, request);
 	};
 
 	return dao;
