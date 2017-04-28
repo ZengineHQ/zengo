@@ -93,7 +93,6 @@ describe('Api', function() {
 				.get('/')
 				.reply(200, function(uri, requestBody) {
 					uri = decodeURIComponent(uri);
-					console.log(uri);
 					expect(uri).to.equal('/v1/forms?attributes=id,createdAt,field123&related=fields,folders');
 					return {};
 				});

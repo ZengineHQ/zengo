@@ -1,26 +1,21 @@
 'use strict';
 
-var Attribute = function() {
+var Attribute = {};
 
-	var attr = {};
+Attribute.isField = function(attribute) {
+	return /^field[0-9]+/.test(attribute);
+};
 
-	attr.isField = function(attribute) {
-		return /^field[0-9]+/.test(attribute);
-	};
+Attribute.forFieldId = function(id) {
+	return 'field' + id;
+};
 
-	attr.forFieldId = function(id) {
-		return 'field' + id;
-	};
+Attribute.forField = function(field) {
+	return Attribute.forFieldId(field.id);
+};
 
-	attr.forField = function(field) {
-		return attr.forFieldId(field.id);
-	};
-
-	attr.getFieldId = function(attribute) {
-		return parseInt(attribute.substring(5));
-	};
-
-	return attr;
+Attribute.getFieldId = function(attribute) {
+	return parseInt(attribute.substring(5));
 };
 
 module.exports = Attribute;

@@ -1,15 +1,22 @@
 'use strict';
 
-var createRecord = function() {
+var attribute = require('./attribute');
 
-	var formRecord = {};
+var Record = {};
 
-	formRecord.getFieldValue = function(record, fieldId) {
-		return record.record['field' + fieldId];
-	};
+Record.getFieldValue = function(record, fieldId) {
+	return record.record['field' + fieldId];
+};
 
-	return formRecord;
+Record.setFieldValue = function(record, fieldId, value) {
 
-}
+	if (record.hasOwnProperty('record')) {
+		record.record[attribute.forFieldId(fieldId)] = value;
+	} else {
+		record[attribute.forFieldId(fieldId)] = value;
+	}
 
-module.exports = createRecord;
+	return record;
+};
+
+module.exports = Record;
