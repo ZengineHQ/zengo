@@ -84,6 +84,20 @@ var createApi = function(znHttp) {
 		return znHttp.put(endpoint, data).then(returnResponseData);
 	};
 
+	api.count = function(endpoint, params) {
+
+		var options = {
+			params: assembleParams(params)
+		};
+
+		var returnParsedResponse = function(response) {
+			var body = response.getBody();
+			return body.totalCount || 0;
+		};
+
+		return znHttp.get(endpoint + '/count', options).then(returnParsedResponse);
+	};
+
 	return api;
 };
 

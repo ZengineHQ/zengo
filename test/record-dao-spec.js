@@ -52,4 +52,5 @@ describe('RecordDao', function() {
 		});
 
 	});
+
 });

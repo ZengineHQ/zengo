@@ -155,4 +155,32 @@ describe('RecordDaoRaw', function() {
 			});
 		});
 	});
+
+	describe('count', function() {
+
+		it('should call COUNT api and return the total count', function() {
+
+			var recordDaoRaw = RecordDaoRaw(api, 123);
+
+			var totalCount = 1;
+
+			var apiResponse = {
+				status: 200,
+  				code: 2000,
+  				totalCount: totalCount
+			};
+
+			znNock.get('/forms/123/records/count?field123=apples').reply(200, apiResponse);
+
+			var request = {
+				field123: 'apples'
+			};
+
+			return recordDaoRaw.count(request).then(function(results) {
+				expect(results).to.be.equal(totalCount);
+			});
+
+		});
+
+	});
 });
