@@ -11,14 +11,18 @@ var FormDao = function(api) {
 		return api.get(endpoint);
 	};
 
-	dao.query = function(params) {
-		params.attributes = params.attributes || 'id,name';
-		params.related = params.related || 'fields,folders';
-		return api.query(baseEndpoint, params);
+	dao.query = function(request) {
+		request.attributes = request.attributes || 'id,name';
+		request.related = request.related || 'fields,folders';
+		return api.query(baseEndpoint, request);
 	};
 
 	dao.save = function(data) {
 		return api.post(baseEndpoint, data);
+	};
+
+	dao.count = function(request) {
+		return api.query(baseEndpoint, request);
 	};
 
 	return dao;
