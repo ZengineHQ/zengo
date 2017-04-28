@@ -2,7 +2,7 @@
 
 var createApi = require('./api');
 var FormDao = require('./form-dao');
-var FieldDao = requier('./field-dao');
+var FieldDao = require('./field-dao');
 var RecordDao = require('./record-dao');
 var RecordDaoRaw = require('./record-dao-raw');
 

@@ -3,6 +3,7 @@
 var filter = require('lodash.filter');
 var find = require('lodash.find');
 var includes = require('lodash.includes');
+var respond = require('./zn-http-fake-util').respond;
 
 var fakeDao = function() {
 	var formDao = {};
@@ -10,9 +11,10 @@ var fakeDao = function() {
 	var _forms = [];
 
 	formDao.get = function(formId) {
-		return find(_forms, function(form) {
+		var form = find(_forms, function(form) {
 			return form.id === formId;
 		});
+		return respond(form);
 	};
 
 	formDao.query = function(params) {
@@ -25,10 +27,10 @@ var fakeDao = function() {
 				return includes(formIds, form.id + '');
 			});
 
-			return forms;
+			return respond(forms);
 
 		}
-		return _forms;
+		return respond(_forms);
 	};
 
 	formDao.save = function(data) {

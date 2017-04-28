@@ -1,6 +1,7 @@
 'use strict';
 
 var forEach = require('lodash.foreach');
+var paginate = require('./zn-resource-paginate');
 
 var fakeDaoFor = function(formId) {
 	var dao = {};
@@ -8,7 +9,8 @@ var fakeDaoFor = function(formId) {
 	var _records = [];
 
 	dao.query = function() {
-		return _records;
+		var data = _records;
+		return paginate(data);
 	};
 
 	dao.save = function(data) {
