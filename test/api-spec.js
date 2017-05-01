@@ -269,7 +269,7 @@ describe('Api', function() {
 				field123: 'apples'
 			};
 
-			return api.count('/forms/123/records', params).then(function(results) {
+			return api.count(endpoint, params).then(function(results) {
 				expect(results).to.be.equal(totalCount);
 			});
 
