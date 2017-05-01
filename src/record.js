@@ -5,15 +5,25 @@ var attribute = require('./attribute');
 var Record = {};
 
 Record.getFieldValue = function(record, fieldId) {
-	return record.record['field' + fieldId];
+
+	var attr = attribute.forFieldId(fieldId);
+
+	if (record.hasOwnProperty('record')) {
+		return record.record[attr];
+	} else {
+		return record[attr];
+	}
+
 };
 
 Record.setFieldValue = function(record, fieldId, value) {
 
+	var attr = attribute.forFieldId(fieldId);
+
 	if (record.hasOwnProperty('record')) {
-		record.record[attribute.forFieldId(fieldId)] = value;
+		record.record[attr] = value;
 	} else {
-		record[attribute.forFieldId(fieldId)] = value;
+		record[attr] = value;
 	}
 
 	return record;
