@@ -4,7 +4,7 @@
 describe('Router', function() {
 
 	var Promise = require('bluebird');
-	
+
 	var util = require('./support/runner-test-util');
 	var router;
 
@@ -182,7 +182,11 @@ describe('Router', function() {
 
 			var testActionTwo = function() {
 				return new Promise(function(resolve, reject) {
-					reject(new Error('Test Error'));
+					var error = new Error('Test Error');
+					error.name = 'TestError';
+					error.customProperty = { one: 1, two: 2};
+					error.log = { myCustomLog: 1 };
+					reject(error);
 				});
 			};
 
@@ -191,13 +195,16 @@ describe('Router', function() {
 			router.get('/two', testActionTwo);
 
 			var expected = {
-				name: 'Error',
+				name: 'TestError',
 				message: 'Test Error'
 			};
 
 			return router.dispatch(eventData).then(function(results) {
 				expect(results.name).to.equal(expected.name);
 				expect(results.message).to.equal(expected.message);
+				expect(results.customProperty).to.deep.equal({ one: 1, two: 2});
+				expect(results.log).to.deep.equal({ myCustomLog: 1 });
+				expect(results).to.have.property('log');
 			});
 
 		});
@@ -229,11 +236,12 @@ describe('Router', function() {
 			return router.dispatch(eventData).then(function(results) {
 				expect(results.name).to.equal(expected.name);
 				expect(results.message).to.equal(expected.message);
+				expect(results).to.not.have.property('log');
 			});
 
 		});
 
-		it('should respond with a 500 custom error when a exception is throwed', function() {
+		it('should respond with a 500 custom error when an exception is throwed', function() {
 
 			var eventData = util.createEventData({
 				method: 'GET',
@@ -244,7 +252,11 @@ describe('Router', function() {
 
 			var testActionTwo = function() {
 				return new Promise(function(resolve, reject) {
-					throw new Error('Test Error');
+					var error = new Error('Test Error');
+					error.name = 'TestError';
+					error.customProperty = { one: 1, two: 2};
+					error.log = { myCustomLog: 1 };
+					throw error;
 				});
 			};
 
@@ -253,18 +265,21 @@ describe('Router', function() {
 			router.get('/two', testActionTwo);
 
 			var expected = {
-				name: 'Error',
+				name: 'TestError',
 				message: 'Test Error'
 			};
 
 			return router.dispatch(eventData).then(function(results) {
 				expect(results.name).to.equal(expected.name);
 				expect(results.message).to.equal(expected.message);
+				expect(results.customProperty).to.deep.equal({ one: 1, two: 2});
+				expect(results.log).to.deep.equal({ myCustomLog: 1 });
+				expect(results).to.have.property('log');
 			});
 
 		});
 
-		it('should respond with a 500 default error when a exception is throwed', function() {
+		it('should respond with a 500 default error when an empty exception is throwed', function() {
 
 			var eventData = util.createEventData({
 				method: 'GET',
@@ -291,6 +306,7 @@ describe('Router', function() {
 			return router.dispatch(eventData).then(function(results) {
 				expect(results.name).to.equal(expected.name);
 				expect(results.message).to.equal(expected.message);
+				expect(results).to.not.have.property('log');
 			});
 
 		});
