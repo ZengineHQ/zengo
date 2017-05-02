@@ -25,7 +25,7 @@ var createDataModule = function(znHttp) {
 		return RecordDao(formDao, RecordDaoRaw(api, formId), formId);
 	};
 
-	data.user = function() {
+	data.forUsers = function() {
 		return createUser(api);
 	};
 
