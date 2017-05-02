@@ -3,7 +3,7 @@
 var Promise = require('bluebird');
 var get = require('lodash.get');
 
-var User = function(http) {
+var User = function(api) {
 
 	var user = {};
 
@@ -26,7 +26,7 @@ var User = function(http) {
 	user.getId = function() {
 
 		var getUser = function() {
-			return http.get('/users/me?attributes=id&related=null');
+			return api.get('/users/me?attributes=id&related=null');
 		};
 
 		var onError = function(response) {
@@ -52,7 +52,7 @@ var User = function(http) {
 
 		var onSuccess = function(response) {
 
-			var userId = get(response.getBody(), 'data.id') || false;
+			var userId = get(response, 'id') || false;
 
 			return userId;
 
@@ -70,23 +70,17 @@ var User = function(http) {
 
 		var getMembershipCount = function(userId) {
 
-			var endpoint = ['/workspaces', workspaceId, 'members', 'count'].join('/');
+			var endpoint = ['/workspaces', workspaceId, 'members'].join('/');
 
 			var options = {
-				params: {
-					'user.id': userId
-				}
+				'user.id': userId
 			};
 
-			return http.get(endpoint, options);
+			return api.count(endpoint, options);
 
 		};
 
-		var checkMembership = function(response) {
-
-			var body = response.getBody();
-
-			var count = get(body, 'totalCount');
+		var checkMembership = function(count) {
 
 			return count === 1 ? true : false;
 

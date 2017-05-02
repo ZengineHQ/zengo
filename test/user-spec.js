@@ -8,7 +8,7 @@ describe('User', function() {
 
 	var nock = require('nock');
 
-	var user = zengo.core.user(http);
+	var user = zengo.data(http).user();
 
 	var apiError = {
 		name: 'ApiError',
