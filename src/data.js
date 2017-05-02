@@ -5,8 +5,10 @@ var FormDao = require('./form-dao');
 var FieldDao = require('./field-dao');
 var RecordDao = require('./record-dao');
 var RecordDaoRaw = require('./record-dao-raw');
+var createUser = require('./user');
 
 var createDataModule = function(znHttp) {
+
 	var data = {};
 	var api = createApi(znHttp);
 	var formDao = FormDao(api);
@@ -21,6 +23,10 @@ var createDataModule = function(znHttp) {
 
 	data.forRecordsOf = function(formId) {
 		return RecordDao(formDao, RecordDaoRaw(api, formId), formId);
+	};
+
+	data.user = function() {
+		return createUser(api);
 	};
 
 	return data;
