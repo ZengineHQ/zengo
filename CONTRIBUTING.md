@@ -25,11 +25,12 @@ npm run lint
 ### Developing locally as dependency on another project
 
 ```bash
-# from zengo source code folder
-# this creates a symbolic link from a global folder to the zengo folder
+# from src/zengo source code folder
+# this creates a symbolic link from a global folder to the src/zengo folder
 npm link
 
-# from project folder
-# this links "node_modules/zengo" in this particular project to the global folder, so that "require" calls looking for zengo wind up loading it from your development folder
+# from src/project folder
+# this links "node_modules/zengo" in this particular project to the global folder, 
+# so that "require" calls looking for zengo wind up loading it from your development folder
 npm link zengo
 ```
