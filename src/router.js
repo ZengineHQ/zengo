@@ -80,21 +80,22 @@ var dispatch = function(eventData) {
 
 		var status = err.status || 500;
 
-		var payload = {
-			name: err.name,
-			message: err.message
-		};
-
 		var defaultPayload = {
 			name: 'InternalServerError',
 			message: 'Internal Server Error'
 		};
 
-		payload = merge(defaultPayload, payload);
+		if (err instanceof Error && err.hasOwnProperty('message')) {
+			Object.defineProperty(err, 'message', { enumerable: true });
+		}
 
-		if (status === 500 && err.stack) {
+		var payload = merge(defaultPayload, err);
+
+		if (!payload.log && status === 500 && err.stack) {
 			payload.log = err.stack;
 		}
+
+		delete payload.status;
 
 		return response.status(status).send(payload);
 
@@ -103,7 +104,6 @@ var dispatch = function(eventData) {
 	var callback = findCallback(method, firstAction);
 
 	if (callback) {
-
 		try {
 			return callback(request, response).then(onSuccess).catch(onError);
 		}
