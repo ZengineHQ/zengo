@@ -194,17 +194,11 @@ describe('Router', function() {
 
 			router.get('/two', testActionTwo);
 
-			var expected = {
-				name: 'TestError',
-				message: 'Test Error'
-			};
-
 			return router.dispatch(eventData).then(function(results) {
-				expect(results.name).to.equal(expected.name);
-				expect(results.message).to.equal(expected.message);
+				expect(results.name).to.equal('TestError');
+				expect(results.message).to.equal('Test Error');
 				expect(results.customProperty).to.deep.equal({ one: 1, two: 2});
 				expect(results.log).to.deep.equal({ myCustomLog: 1 });
-				expect(results).to.have.property('log');
 			});
 
 		});
@@ -228,20 +222,15 @@ describe('Router', function() {
 
 			router.get('/two', testActionTwo);
 
-			var expected = {
-				name: 'InternalServerError',
-				message: 'Internal Server Error'
-			};
-
 			return router.dispatch(eventData).then(function(results) {
-				expect(results.name).to.equal(expected.name);
-				expect(results.message).to.equal(expected.message);
+				expect(results.name).to.equal('InternalServerError');
+				expect(results.message).to.equal('Internal Server Error');
 				expect(results).to.not.have.property('log');
 			});
 
 		});
 
-		it('should respond with a 500 custom error when an exception is throwed', function() {
+		it('should respond with a 500 custom error when an exception is thrown', function() {
 
 			var eventData = util.createEventData({
 				method: 'GET',
@@ -264,22 +253,16 @@ describe('Router', function() {
 
 			router.get('/two', testActionTwo);
 
-			var expected = {
-				name: 'TestError',
-				message: 'Test Error'
-			};
-
 			return router.dispatch(eventData).then(function(results) {
-				expect(results.name).to.equal(expected.name);
-				expect(results.message).to.equal(expected.message);
+				expect(results.name).to.equal('TestError');
+				expect(results.message).to.equal('Test Error');
 				expect(results.customProperty).to.deep.equal({ one: 1, two: 2});
 				expect(results.log).to.deep.equal({ myCustomLog: 1 });
-				expect(results).to.have.property('log');
 			});
 
 		});
 
-		it('should respond with a 500 default error when an empty exception is throwed', function() {
+		it('should respond with a 500 default error when an empty exception is thrown', function() {
 
 			var eventData = util.createEventData({
 				method: 'GET',
@@ -298,14 +281,9 @@ describe('Router', function() {
 
 			router.get('/two', testActionTwo);
 
-			var expected = {
-				name: 'InternalServerError',
-				message: 'Internal Server Error'
-			};
-
 			return router.dispatch(eventData).then(function(results) {
-				expect(results.name).to.equal(expected.name);
-				expect(results.message).to.equal(expected.message);
+				expect(results.name).to.equal('InternalServerError');
+				expect(results.message).to.equal('Internal Server Error');
 				expect(results).to.not.have.property('log');
 			});
 
