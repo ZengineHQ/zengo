@@ -15,7 +15,7 @@ var User = function(api) {
 		};
 	};
 
-	var UnauthorizedError = function() {
+	var unauthorizedError = function() {
 		return {
 			name: 'Unauthorized',
 			message: 'User is not authorized',
@@ -38,7 +38,7 @@ var User = function(api) {
 				case 401:
 				case 403:
 				case 404:
-					error = UnauthorizedError();
+					error = unauthorizedError();
 					break;
 
 				default:
@@ -82,12 +82,22 @@ var User = function(api) {
 
 		var checkMembership = function(count) {
 
-			return count === 1 ? true : false;
+			if (count === 1) {
+				return Promise.resolve(true);
+			} else {
+				return Promise.reject(unauthorizedError());
+			}
 
 		};
 
 		var onError = function(error) {
-			return Promise.reject(apiError());
+
+			if (error.name === 'Unauthorized') {
+				return Promise.reject(error);
+			} else {
+				return Promise.reject(apiError());
+			}
+
 		};
 
 		var onSuccess = function(isAuthorized) {

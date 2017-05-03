@@ -16,7 +16,7 @@ describe('User', function() {
 		status: 500
 	};
 
-	var UnauthorizedError = {
+	var unauthorizedError = {
 		name: 'Unauthorized',
 		message: 'User is not authorized',
 		status: 401
@@ -27,7 +27,7 @@ describe('User', function() {
 		it('should reject with not authorized for 401 api responses', function() {
 
 			var check = function(results) {
-				expect(results).to.be.deep.equal(UnauthorizedError);
+				expect(results).to.be.deep.equal(unauthorizedError);
 			};
 
 			var response = {};
@@ -44,7 +44,7 @@ describe('User', function() {
 		it('should reject with not authorized for 403 api responses', function() {
 
 			var check = function(results) {
-				expect(results).to.be.deep.equal(UnauthorizedError);
+				expect(results).to.be.deep.equal(unauthorizedError);
 			};
 
 			var response = {};
@@ -60,7 +60,7 @@ describe('User', function() {
 		it('should reject with not authorized for 404 api responses', function() {
 
 			var check = function(results) {
-				expect(results).to.be.deep.equal(UnauthorizedError);
+				expect(results).to.be.deep.equal(unauthorizedError);
 			};
 
 			var response = {};
@@ -141,7 +141,7 @@ describe('User', function() {
 				.get('/workspaces/101/members/count?user.id=1001')
 				.reply(200, response);
 
-			return user.isAuthorizedInWorkspace(workspaceId, userId).then(check);
+			return user.isAuthorizedInWorkspace(workspaceId, userId).then(check, expect.fail);
 
 		});
 
@@ -152,7 +152,7 @@ describe('User', function() {
 			var userId = 1002;
 
 			var check = function(results) {
-				expect(results).to.be.false;
+				expect(results).to.be.deep.equal(unauthorizedError);
 			};
 
 			var response = {
@@ -165,7 +165,7 @@ describe('User', function() {
 				.get('/workspaces/102/members/count?user.id=1002')
 				.reply(200, response);
 
-			return user.isAuthorizedInWorkspace(workspaceId, userId).then(check);
+			return user.isAuthorizedInWorkspace(workspaceId, userId).then(expect.fail, check);
 
 		});
 
@@ -203,7 +203,7 @@ describe('User', function() {
 				.get('/workspaces/103/members/count?user.id=1003')
 				.reply(200, responseTwo);
 
-			return user.isAuthorizedInWorkspace(workspaceId).then(check);
+			return user.isAuthorizedInWorkspace(workspaceId).then(check, expect.fail);
 
 		});
 
@@ -212,7 +212,7 @@ describe('User', function() {
 			var workspaceId = 104;
 
 			var check = function(results) {
-				expect(results).to.be.false;
+				expect(results).to.be.deep.equal(unauthorizedError);
 			};
 
 			var responseOne = {
@@ -241,7 +241,7 @@ describe('User', function() {
 				.get('/workspaces/104/members/count?user.id=1004')
 				.reply(200, responseTwo);
 
-			return user.isAuthorizedInWorkspace(workspaceId).then(check);
+			return user.isAuthorizedInWorkspace(workspaceId).then(expect.fail, check);
 
 		});
 
