@@ -198,7 +198,6 @@ describe('Router', function() {
 				expect(results.name).to.equal('TestError');
 				expect(results.message).to.equal('Test Error');
 				expect(results.customProperty).to.deep.equal({ one: 1, two: 2});
-				expect(results.log).to.deep.equal({ myCustomLog: 1 });
 			});
 
 		});
