@@ -7,7 +7,7 @@ var merge = require('lodash.merge');
 
 var httpFakeForm = require('./zn-http-fake-form.js');
 var httpFakeRecord = require('./zn-http-fake-record.js');
-
+var httpFakeCatchAll = require('./zn-http-fake-catch-all');
 
 var createGenericRouter = function() {
 
@@ -42,7 +42,8 @@ var createGenericRouter = function() {
 			return RoutePattern.fromString(route.pattern).matches(endpoint);
 		});
 		if (!route) {
-			throw Error('ZnHttpFake: unimplemented route: ' + method + ': ' + endpoint);
+			// throw Error('ZnHttpFake: unimplemented route: ' + method + ': ' + endpoint);
+			return httpFakeCatchAll[method](endpoint, params);
 		}
 		var match = RoutePattern.fromString(route.pattern).match(endpoint);
 		var allParams = merge(params, match.namedParams);
