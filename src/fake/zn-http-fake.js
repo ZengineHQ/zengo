@@ -9,12 +9,13 @@ var httpFakeForm = require('./zn-http-fake-form.js');
 var httpFakeRecord = require('./zn-http-fake-record.js');
 var httpFakeCatchAll = require('./zn-http-fake-catch-all');
 
-var createGenericRouter = function() {
+var createGenericRouter = function(catchAll) {
 
 	var actions = {
 		'GET': [],
 		'POST': [],
 		'PUT': [],
+		'DELETE': []
 	};
 
 	var register = function(method, pattern, callback) {
@@ -37,30 +38,40 @@ var createGenericRouter = function() {
 		return register('PUT', pattern, callback);
 	};
 
-	var dispatch = function(method, endpoint, params) {
+	var registerDelAction = function(pattern, callback) {
+		return register('DELETE', pattern, callback);
+	};
+
+	var dispatch = function(method, endpoint, optionsOrData, options) {
 		var route = find(actions[method], function(route) {
 			return RoutePattern.fromString(route.pattern).matches(endpoint);
 		});
 		if (!route) {
 			// throw Error('ZnHttpFake: unimplemented route: ' + method + ': ' + endpoint);
-			return httpFakeCatchAll[method](endpoint, params);
+			return catchAll(method, endpoint, optionsOrData, options);
 		}
 		var match = RoutePattern.fromString(route.pattern).match(endpoint);
-		var allParams = merge(params, match.namedParams);
-		return route.callback(allParams);
+		if (options) {
+			options = merge(options, match.namedParams);
+		} else {
+			optionsOrData = merge(optionsOrData, match.namedParams);
+		}
+		return route.callback(optionsOrData, options);
 	};
 
 	return {
 		get: registerGetAction,
 		post: registerPostAction,
 		put: registerPutAction,
+		del: registerDelAction,
 		dispatch: dispatch,
 	};
 };
 
-var createZnCoreFake = function() {
+var createZnCoreFake = function(data) {
 
-	var router = createGenericRouter();
+	var catchAll = httpFakeCatchAll(data).catchAll;
+	var router = createGenericRouter(catchAll);
 	var fakeFormRepo = httpFakeForm();
 	var fakeRecordRepo = httpFakeRecord();
 
@@ -103,10 +114,11 @@ var createZnCoreFake = function() {
 	};
 };
 
-var createZnHttpFake = function() {
+var createZnHttpFake = function(data) {
+
 	var znHttp = {};
 
-	var core = createZnCoreFake();
+	var core = createZnCoreFake(data);
 
 	var respond = function(body) {
 		var response = {
@@ -118,20 +130,28 @@ var createZnHttpFake = function() {
 	};
 
 	znHttp.get = function(endpoint, options) {
-		var body = core.dispatch('GET', endpoint, options.params);
+		var body = core.dispatch('GET', endpoint, options);
 		return respond(body);
 	};
 
-	znHttp.post = function(endpoint, data) {
-		var responseData = core.dispatch('POST', endpoint, data);
+	znHttp.post = function(endpoint, data, options) {
+		var responseData = core.dispatch('POST', endpoint, data, options);
 		var body = {
 			data: responseData,
 		};
 		return respond(body);
 	};
 
-	znHttp.put = function(endpoint, data) {
-		var responseData = core.dispatch('PUT', endpoint, data);
+	znHttp.put = function(endpoint, data, options) {
+		var responseData = core.dispatch('PUT', endpoint, data, options);
+		var body = {
+			data: responseData,
+		};
+		return respond(body);
+	};
+
+	znHttp.del = function(endpoint, options) {
+		var responseData = core.dispatch('DELETE', endpoint, options);
 		var body = {
 			data: responseData,
 		};

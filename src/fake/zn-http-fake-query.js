@@ -2,7 +2,6 @@
 
 var get = require('lodash.get');
 var util = require('./zn-http-fake-query-util');
-var orderBy = require('lodash.orderby');
 
 var fakeQuery = function(data, params) {
 
