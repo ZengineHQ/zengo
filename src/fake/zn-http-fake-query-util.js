@@ -19,46 +19,24 @@ var reservedParams = [
 
 queryUtil.getPaginateParams = function(params) {
 
-	var paginate;
+	var paginate = {
+		page: get(params, 'page') || 1,
+		limit: get(params, 'limit') || 20
 
-	var page = get(params, 'page');
-	var limit = get(params, 'limit');
-
-	if (page) {
-		paginate = { page: page };
-	}
-
-	if (!page && limit) {
-		paginate = { limit: limit };
-	}
-
-	if (page && limit) {
-		paginate = { page: page, limit: limit };
-	}
+	};
 
 	return paginate;
 
 };
 
+// todo: needs to support php array like params
+// sort[0]=1,sort[1]=2 direction[0]=asc,direction[1]=desc
 queryUtil.getSortingParams = function(params) {
 
-	var sorting;
-
-	var sort = get(params, 'sort');
-
-	var direction = get(params, 'direction');
-
-	if (sort) {
-		sorting = { sort: sort };
-	}
-
-	if (!sort && direction) {
-		sorting = { direction: direction };
-	}
-
-	if (sort && direction) {
-		sorting = { sort: sort, direction: direction };
-	}
+	var sorting = {
+		sort: get(params, 'sort') || 'id',
+		direction: get(params, 'direction') || 'asc'
+	};
 
 	return sorting;
 
@@ -69,7 +47,7 @@ queryUtil.getFilterParam = function(params) {
 	var filter = get(params, 'filter');
 
 	return filter ? filter : undefined;
-}
+};
 
 queryUtil.getAttributesParam = function(params) {
 

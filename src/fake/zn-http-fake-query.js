@@ -2,6 +2,7 @@
 
 var get = require('lodash.get');
 var util = require('./zn-http-fake-query-util');
+var orderBy = require('lodash.orderby');
 
 var fakeQuery = function(data, params) {
 
@@ -11,14 +12,24 @@ var fakeQuery = function(data, params) {
 
 		var pagination = util.getPaginateParams(params);
 
-		if (!pagination) {
+		if (!data || !pagination) {
 			return query;
 		}
+
+		var page = pagination.page || 1;
+
+		var limit = pagination.limit || 20;
+
+		--page;
+
+		data = data.slice(page * limit, (page + 1) * limit);
 
 		return query;
 
 	};
 
+	// todo: needs to support php array like params
+	// sort[0]=1,sort[1]=2 direction[0]=asc,direction[1]=desc
 	query.sort = function() {
 
 		var sorting = util.getSortingParams(params);
@@ -27,7 +38,7 @@ var fakeQuery = function(data, params) {
 			return query;
 		}
 
-		data = orderby(data, sorting.sort, sorting.direction);
+		data = orderBy(data, sorting.sort, sorting.direction);
 
 		return query;
 
@@ -62,6 +73,7 @@ var fakeQuery = function(data, params) {
 
 	};
 
+	// todo: really necessary only for testing?
 	query.restrictToAttributes = function() {
 
 		var attributes = util.getAttributesParam(params);
@@ -74,6 +86,7 @@ var fakeQuery = function(data, params) {
 
 	};
 
+	// todo: really necessary only for testing?
 	query.restrictToRelated = function() {
 
 		var related = util.getRelatedParam(params);

@@ -6,7 +6,7 @@ describe('znHttpFake (query)', function() {
 
 	describe('paginate', function() {
 
-		it ('should return an instance of itself', function() {
+		it('should return an instance of itself', function() {
 
 			var query = Query();
 
@@ -14,11 +14,51 @@ describe('znHttpFake (query)', function() {
 
 		});
 
+		it('should paginate with params', function() {
+
+			var data = [
+				{
+					id: 1,
+					name: 'Workspace1'
+				},
+				{
+					id: 2,
+					name: 'Workspace2'
+				},
+				{
+					id: 3,
+					name: 'Workspace3'
+				},
+				{
+					id: 4,
+					name: 'Workspace4'
+				},
+				{
+					id: 5,
+					name: 'Workspace5'
+				}
+			];
+
+			var params = {
+				page: 2,
+				limit: 2
+			};
+
+			var expected = [ { id: 3, name: 'Workspace3' }, { id: 4, name: 'Workspace4' } ];
+
+			var query = Query(data, params);
+
+			var results = query.paginate().getResults();
+
+			expect(results).to.deep.equal(expected);
+
+		});
+
 	});
 
 	describe('sort', function() {
 
-		it ('should return an instance of itself', function() {
+		it('should return an instance of itself', function() {
 
 			var query = Query();
 
@@ -26,11 +66,132 @@ describe('znHttpFake (query)', function() {
 
 		});
 
+		it('should sort by `id` ascending', function() {
+
+			var data = [
+				{
+					id: 3,
+					name: 'Workspace3'
+				},
+				{
+					id: 1,
+					name: 'Workspace1'
+				},
+				{
+					id: 4,
+					name: 'Workspace4'
+				},
+				{
+					id: 5,
+					name: 'Workspace5'
+				},
+				{
+					id: 2,
+					name: 'Workspace2'
+				}
+			];
+
+			var params = {
+				sort: 'id',
+				direction: 'asc'
+			};
+
+			var expected = [
+				{
+					id: 1,
+					name: 'Workspace1'
+				},
+				{
+					id: 2,
+					name: 'Workspace2'
+				},
+				{
+					id: 3,
+					name: 'Workspace3'
+				},
+				{
+					id: 4,
+					name: 'Workspace4'
+				},
+				{
+					id: 5,
+					name: 'Workspace5'
+				}
+			];
+
+			var query = Query(data, params);
+
+			var results = query.sort().getResults();
+
+			expect(results).to.deep.equal(expected);
+
+		});
+
+		it('should sort by `id` descending', function() {
+
+			var data = [
+				{
+					id: 3,
+					name: 'Workspace3'
+				},
+				{
+					id: 1,
+					name: 'Workspace1'
+				},
+				{
+					id: 4,
+					name: 'Workspace4'
+				},
+				{
+					id: 5,
+					name: 'Workspace5'
+				},
+				{
+					id: 2,
+					name: 'Workspace2'
+				}
+			];
+
+			var params = {
+				sort: 'id',
+				direction: 'desc'
+			};
+
+			var expected = [
+				{
+					id: 5,
+					name: 'Workspace5'
+				},
+				{
+					id: 4,
+					name: 'Workspace4'
+				},
+				{
+					id: 3,
+					name: 'Workspace3'
+				},
+				{
+					id: 2,
+					name: 'Workspace2'
+				},
+				{
+					id: 1,
+					name: 'Workspace1'
+				}
+			];
+
+			var query = Query(data, params);
+
+			var results = query.sort().getResults();
+
+			expect(results).to.deep.equal(expected);
+
+		});
 	});
 
 	describe('filter', function() {
 
-		it ('should return an instance of itself', function() {
+		it('should return an instance of itself', function() {
 
 			var query = Query();
 
@@ -42,7 +203,7 @@ describe('znHttpFake (query)', function() {
 
 	describe('restrictToAttributes', function() {
 
-		it ('should return an instance of itself', function() {
+		it('should return an instance of itself', function() {
 
 			var query = Query();
 
@@ -50,11 +211,50 @@ describe('znHttpFake (query)', function() {
 
 		});
 
+		it('should return only selected attributes', function() {
+
+			var data = [
+				{
+					id: 3,
+					name: 'Workspace3',
+					isDisabled: false,
+					tags: null,
+					description: null,
+					created: '2016-10-03T20:09:35+0000',
+					modified: '2016-11-11T16:22:49+0000'
+				},
+				{
+					id: 1,
+					name: 'Workspace1'
+					isDisabled: false,
+					tags: null,
+					description: null,
+					created: '2016-10-03T20:09:35+0000',
+					modified: '2016-11-11T16:22:49+0000'
+				},
+				{
+					id: 4,
+					name: 'Workspace4'
+					isDisabled: false,
+					tags: null,
+					description: null,
+					created: '2016-10-03T20:09:35+0000',
+					modified: '2016-11-11T16:22:49+0000'
+				}
+			];
+
+			var params = {
+				sort: 'id',
+				direction: 'asc'
+			};
+
+		});
+
 	});
 
 	describe('restrictToRelated', function() {
 
-		it ('should return an instance of itself', function() {
+		it('should return an instance of itself', function() {
 
 			var query = Query();
 
@@ -80,7 +280,7 @@ describe('znHttpFake (query)', function() {
 
 		});
 
-		it ('should return an instance of itself', function() {
+		it('should return an instance of itself', function() {
 
 			var query = Query();
 

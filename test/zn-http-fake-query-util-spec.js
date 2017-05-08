@@ -18,35 +18,35 @@ describe('znHttpFake (query util)', function() {
 
 		});
 
-		it('should return only set pagination params', function() {
+		it('should return set pagination params', function() {
 
 			var params = {
 				sort: 'asc',
 				limit: 10
 			};
 
-			expect(util.getPaginateParams(params)).to.be.eql({ limit: 10 });
+			expect(util.getPaginateParams(params)).to.be.eql({ page: 1, limit: 10 });
 
 		});
 
-		it('should return undefined without pagination params', function() {
+		it('should return defaults pagination params', function() {
 
 			var params = {
 				id: 1
 			};
 
-			expect(util.getPaginateParams(params)).to.be.undefined;
+			expect(util.getPaginateParams(params)).to.be.eql({ page: 1, limit: 20 });
 
 		});
 
-		it('should return undefined for empty pagination params', function() {
+		it('should return defaults for empty pagination params', function() {
 
 			var params = {
 				page: null,
 				limit: null
 			};
 
-			expect(util.getPaginateParams(params)).to.be.undefined;
+			expect(util.getPaginateParams(params)).to.be.eql({ page: 1, limit: 20 });
 
 		});
 
@@ -66,35 +66,35 @@ describe('znHttpFake (query util)', function() {
 
 		});
 
-		it('should return only set sorting params', function() {
+		it('should return set sorting params', function() {
 
 			var params = {
 				id: 1,
 				direction: 'asc'
 			};
 
-			expect(util.getSortingParams(params)).to.be.eql({ direction: 'asc' });
+			expect(util.getSortingParams(params)).to.be.eql({ sort: 'id', direction: 'asc' });
 
 		});
 
-		it('should return undefined without sorting params', function() {
+		it('should return defaults sorting params', function() {
 
 			var params = {
 				id: 1
 			};
 
-			expect(util.getSortingParams(params)).to.be.undefined;
+			expect(util.getSortingParams(params)).to.be.eql({ sort: 'id', direction: 'asc' });
 
 		});
 
-		it('should return undefined for empty sorting params', function() {
+		it('should return defaults for empty sorting params', function() {
 
 			var params = {
 				sort: null,
 				direction: null
 			};
 
-			expect(util.getSortingParams(params)).to.be.undefined;
+			expect(util.getSortingParams(params)).to.be.eql({ sort: 'id', direction: 'asc' });
 
 		});
 

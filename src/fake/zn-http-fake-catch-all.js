@@ -282,7 +282,7 @@ var fakeDao = function(datum) {
 		// a list of all public available resource can be found in here:
 		// https://github.com/Wizehive/sandy/blob/master/app/Console/Command/ApiDocsShell.php#L172
 		//
-		// for special resources it can be implement using custom dao's
+		// for special resources it can be implemented using custom dao's
 
 		switch (method) {
 
