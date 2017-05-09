@@ -4,6 +4,168 @@ describe('znHttpFake (query)', function() {
 
 	var query = require('../src/fake/zn-http-fake-query');
 
+	describe('filter', function() {
+
+		it('should return results for prefix `` condition', function() {
+
+			var data = [
+				{ id: 1, name: 'Workspace1' },
+				{ id: 2, name: 'Workspace2' },
+				{ id: 3, name: 'Workspace3' },
+				{ id: 4, name: 'Workspace4' },
+				{ id: 5, name: 'Workspace5' }
+			];
+
+			var params = {
+				filter: { and: [ { prefix: '', attribute: 'id', value: 3 } ] }
+			};
+
+			expect(query.filter(data, params)).to.eql([ { id: 3, name: 'Workspace3' } ]);
+
+		});
+
+		it('should return results for prefix `not` condition', function() {
+
+			var data = [
+				{ id: 1, name: 'Workspace1' },
+				{ id: 2, name: 'Workspace2' },
+				{ id: 3, name: 'Workspace3' },
+				{ id: 4, name: 'Workspace4' },
+				{ id: 5, name: 'Workspace5' }
+			];
+
+			var params = {
+				filter: {
+					and: [
+						{ prefix: 'not', attribute: 'id', value: 1 },
+						{ prefix: 'not', attribute: 'id', value: 2 },
+						{ prefix: 'not', attribute: 'id', value: 4 },
+						{ prefix: 'not', attribute: 'id', value: 5 }
+					]
+				}
+			};
+
+			expect(query.filter(data, params)).to.eql([ { id: 3, name: 'Workspace3' } ]);
+
+		});
+
+		it('should return results for prefix `min` condition', function() {
+
+			var data = [
+				{ id: 1, name: 'Workspace1' },
+				{ id: 2, name: 'Workspace2' },
+				{ id: 3, name: 'Workspace3' },
+				{ id: 4, name: 'Workspace4' },
+				{ id: 5, name: 'Workspace5' }
+			];
+
+			var params = {
+				filter: { and: [ { prefix: 'min', attribute: 'id', value: 4 } ] }
+			};
+
+			expect(query.filter(data, params)).to.eql([ { id: 4, name: 'Workspace4' }, { id: 5, name: 'Workspace5' } ]);
+
+		});
+
+		it('should return results for prefix `max` condition', function() {
+
+			var data = [
+				{ id: 1, name: 'Workspace1' },
+				{ id: 2, name: 'Workspace2' },
+				{ id: 3, name: 'Workspace3' },
+				{ id: 4, name: 'Workspace4' },
+				{ id: 5, name: 'Workspace5' }
+			];
+
+			var params = {
+				filter: { and: [ { prefix: 'max', attribute: 'id', value: 2 } ] }
+			};
+
+			expect(query.filter(data, params)).to.eql([ { id: 1, name: 'Workspace1' }, { id: 2, name: 'Workspace2' } ]);
+
+		});
+
+		it('should return results for prefix `contains` condition', function() {
+
+			var data = [
+				{ id: 1, name: 'Workspace1' },
+				{ id: 2, name: 'Workspace2' },
+				{ id: 3, name: 'Workspace3' },
+				{ id: 4, name: 'Workspace4' },
+				{ id: 5, name: 'Workspace5' }
+			];
+
+			var params = {
+				filter: { and: [ { prefix: 'contains', attribute: 'name', value: 'space3' } ] }
+			};
+
+			expect(query.filter(data, params)).to.eql([ { id: 3, name: 'Workspace3' } ]);
+
+		});
+
+		it('should return results for prefix `not-contains` condition', function() {
+
+			var data = [
+				{ id: 1, name: 'Workspace1' },
+				{ id: 2, name: 'Workspace2' },
+				{ id: 3, name: 'Workspace3' },
+				{ id: 4, name: 'Workspace4' },
+				{ id: 5, name: 'Workspace5' }
+			];
+
+			var params = {
+				filter: {
+					and: [
+						{ prefix: 'not-contains', attribute: 'name', value: 'space1' },
+						{ prefix: 'not-contains', attribute: 'name', value: 'space3' },
+						{ prefix: 'not-contains', attribute: 'name', value: 'space4' },
+						{ prefix: 'not-contains', attribute: 'name', value: 'space5' }
+					]
+				}
+			};
+
+			expect(query.filter(data, params)).to.eql([ { id: 2, name: 'Workspace2' } ]);
+
+		});
+
+		it('should return results for prefix `starts-with` condition', function() {
+
+			var data = [
+				{ id: 1, name: 'The first workspace1' },
+				{ id: 2, name: 'The second workspace2' },
+				{ id: 3, name: 'The third workspace3' },
+				{ id: 4, name: 'The fourth workspace4' },
+				{ id: 5, name: 'The fifth workspace5' }
+			];
+
+			var params = {
+				filter: { and: [ { prefix: 'contains', attribute: 'name', value: 'The second' } ] }
+			};
+
+			expect(query.filter(data, params)).to.eql([ { id: 2, name: 'The second workspace2' } ]);
+
+		});
+
+		it('should return results for prefix `ends-with` condition', function() {
+
+			var data = [
+				{ id: 1, name: 'Workspace1' },
+				{ id: 2, name: 'Workspace2' },
+				{ id: 3, name: 'Workspace3' },
+				{ id: 4, name: 'Workspace4' },
+				{ id: 5, name: 'Workspace5' }
+			];
+
+			var params = {
+				filter: { and: [ { prefix: 'contains', attribute: 'name', value: 'space3' } ] }
+			};
+
+			expect(query.filter(data, params)).to.eql([ { id: 3, name: 'Workspace3' } ]);
+
+		});
+
+	});
+
 	describe('sortAndPaginate', function() {
 
 		it('should paginate with params', function() {
@@ -158,10 +320,6 @@ describe('znHttpFake (query)', function() {
 
 	});
 
-	describe('filter', function() {
-
-	});
-
 	describe('project', function() {
 
 		it('should return only selected attributes (multiple)', function() {
@@ -255,7 +413,7 @@ describe('znHttpFake (query)', function() {
 				attributes: 'name'
 			};
 
-			// `id` still comes back since it's mandatory
+			// `id` still comes back since it's implicit
 			var expected = [
 				{
 					id: 3,

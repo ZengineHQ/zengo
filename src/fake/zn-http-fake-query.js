@@ -4,6 +4,8 @@ var get = require('lodash.get');
 var util = require('./zn-http-fake-query-util');
 var orderBy = require('lodash.orderby');
 var forEach = require('lodash.foreach');
+var filterMatcher = require('../filter-matcher');
+var recordMatchesFilter = filterMatcher().recordMatchesFilter;
 
 var fakeQuery = {};
 
@@ -20,17 +22,18 @@ fakeQuery.filter = function(data, params) {
 		return data;
 	}
 
-	var filter = util.conditionalParamsToFilter(conditionalParams);
+	// var filter = util.conditionalParamsToFilter(conditionalParams);
 
 	// todo: check does the api merge both
 	// conditional params and a filter?
 
-	if (!filter) {
-		return data;
-	}
+	// if (!filter) {
+	// 	return data;
+	// }
 
-	// todo: that filter match goes in here
-	// data = filterMatcher(data, filter);
+	data = data.filter(function(record) {
+		return recordMatchesFilter(record, filterParam);
+	});
 
 	return data;
 
@@ -77,7 +80,7 @@ fakeQuery.project = function(data, params) {
 
 		if (attributes) {
 
-			attributes.push('id'); // mandatory
+			attributes.push('id'); // implicit
 
 			data[index] = attributes.reduce(function(result, key) {
 				result[key] = obj[key];
