@@ -2,7 +2,7 @@
 
 var get = require('lodash.get');
 var attribute = require('../attribute');
-var forEach = require('lodash.forEach');
+var forEach = require('lodash.foreach');
 
 var queryUtil = {};
 
@@ -53,7 +53,7 @@ queryUtil.getAttributesParam = function(params) {
 
 	var attributes = get(params, 'attributes');
 
-	if (attributes && attributes.includes(',')) {
+	if (attributes) {
 		attributes = attributes.split(',');
 	}
 

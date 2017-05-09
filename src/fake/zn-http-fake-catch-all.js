@@ -96,7 +96,8 @@ var fakeDao = function(datum) {
 
 		if (endpoint && endpoint.endsWith('/count')) {
 
-			data = query(data, params).filter().getCount();
+			data = query.filter(data, params);
+			data = query.count(data);
 
 			return {
 				status: 200,
@@ -106,41 +107,30 @@ var fakeDao = function(datum) {
 
 		}
 
-		else if (isObject(data) && !data.length) {
+		else if (isObject(data) && !Array.isArray(data)) {
 
-			data = query(data, params)
-				.restrictToAttributes()
-				.restrictToRelated()
-				.getResults();
-
+			data = query.project(data, params);
 			data = data || {};
 
 		}
 
-		else if (isObject(data) && data.length) {
+		else if (Array.isArray(data)) {
 
-			data = query(data, params)
-				.filter()
-				.sort()
-				.paginate()
-				.restrictToAttributes()
-				.restrictToRelated()
-				.getResults();
-
+			data = query.filter(data, params);
+			data = query.sortAndPaginate(data, params);
+			data = query.project(data, params);
 			data = data || [];
 
 		}
 
-		var response = {
+		return {
 			status: 200,
 			code: 2000,
 			limit: 20,
 			offset: 0,
-			totalCount: query(data).getCount(),
+			totalCount: query.count(data),
 			data: data
 		};
-
-		return response;
 
 	};
 
@@ -173,7 +163,7 @@ var fakeDao = function(datum) {
 		// /resource (new)
 		if (!data && !namedParams.resourceId) {
 			dataToSave.id = 1;
-			datum[namedParams.resource] = dataToSave;
+			datum[namedParams.resource] = [dataToSave];
 			return dataToSave;
 		}
 
@@ -269,8 +259,8 @@ var fakeDao = function(datum) {
 	dao.catchAll = function(method, endpoint, optionsOrData, options) {
 
 		// won't work for everything
-		// the general idea is to support general api operations on the following
-		// resource patterns
+		// the general idea is to support common api operations for the following
+		// resources
 		//
 		// /:resource
 		// /:resource/count
@@ -279,7 +269,7 @@ var fakeDao = function(datum) {
 		// /:resource/:resourceId/:subResource/count
 		// /:resource/:resourceId/:subResource/:subResourceId
 		//
-		// a list of all public available resource can be found in here:
+		// a list of all public available resources can be found in here:
 		// https://github.com/Wizehive/sandy/blob/master/app/Console/Command/ApiDocsShell.php#L172
 		//
 		// for special resources it can be implemented using custom dao's

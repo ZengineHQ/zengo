@@ -2,17 +2,9 @@
 
 describe('znHttpFake (query)', function() {
 
-	var Query = require('../src/fake/zn-http-fake-query');
+	var query = require('../src/fake/zn-http-fake-query');
 
-	describe('paginate', function() {
-
-		it('should return an instance of itself', function() {
-
-			var query = Query();
-
-			expect(query.paginate()).to.be.eql(query);
-
-		});
+	describe('sortAndPaginate', function() {
 
 		it('should paginate with params', function() {
 
@@ -46,23 +38,7 @@ describe('znHttpFake (query)', function() {
 
 			var expected = [ { id: 3, name: 'Workspace3' }, { id: 4, name: 'Workspace4' } ];
 
-			var query = Query(data, params);
-
-			var results = query.paginate().getResults();
-
-			expect(results).to.deep.equal(expected);
-
-		});
-
-	});
-
-	describe('sort', function() {
-
-		it('should return an instance of itself', function() {
-
-			var query = Query();
-
-			expect(query.sort()).to.be.eql(query);
+			expect(query.sortAndPaginate(data, params)).to.deep.equal(expected);
 
 		});
 
@@ -119,11 +95,7 @@ describe('znHttpFake (query)', function() {
 				}
 			];
 
-			var query = Query(data, params);
-
-			var results = query.sort().getResults();
-
-			expect(results).to.deep.equal(expected);
+			expect(query.sortAndPaginate(data, params)).to.deep.equal(expected);
 
 		});
 
@@ -180,38 +152,19 @@ describe('znHttpFake (query)', function() {
 				}
 			];
 
-			var query = Query(data, params);
-
-			var results = query.sort().getResults();
-
-			expect(results).to.deep.equal(expected);
+			expect(query.sortAndPaginate(data, params)).to.deep.equal(expected);
 
 		});
+
 	});
 
 	describe('filter', function() {
 
-		it('should return an instance of itself', function() {
-
-			var query = Query();
-
-			expect(query.filter()).to.be.eql(query);
-
-		});
-
 	});
 
-	describe('restrictToAttributes', function() {
+	describe('project', function() {
 
-		it('should return an instance of itself', function() {
-
-			var query = Query();
-
-			expect(query.restrictToAttributes()).to.be.eql(query);
-
-		});
-
-		it('should return only selected attributes', function() {
+		it('should return only selected attributes (multiple)', function() {
 
 			var data = [
 				{
@@ -225,7 +178,7 @@ describe('znHttpFake (query)', function() {
 				},
 				{
 					id: 1,
-					name: 'Workspace1'
+					name: 'Workspace1',
 					isDisabled: false,
 					tags: null,
 					description: null,
@@ -234,7 +187,7 @@ describe('znHttpFake (query)', function() {
 				},
 				{
 					id: 4,
-					name: 'Workspace4'
+					name: 'Workspace4',
 					isDisabled: false,
 					tags: null,
 					description: null,
@@ -244,29 +197,89 @@ describe('znHttpFake (query)', function() {
 			];
 
 			var params = {
-				sort: 'id',
-				direction: 'asc'
+				attributes: 'id,name'
 			};
 
+			var expected = [
+				{
+					id: 3,
+					name: 'Workspace3',
+				},
+				{
+					id: 1,
+					name: 'Workspace1',
+				},
+				{
+					id: 4,
+					name: 'Workspace4',
+				}
+			];
+
+			expect(query.project(data, params)).to.deep.equal(expected);
+
+		});
+
+		it('should return only selected attributes (single)', function() {
+
+			var data = [
+				{
+					id: 3,
+					name: 'Workspace3',
+					isDisabled: false,
+					tags: null,
+					description: null,
+					created: '2016-10-03T20:09:35+0000',
+					modified: '2016-11-11T16:22:49+0000'
+				},
+				{
+					id: 1,
+					name: 'Workspace1',
+					isDisabled: false,
+					tags: null,
+					description: null,
+					created: '2016-10-03T20:09:35+0000',
+					modified: '2016-11-11T16:22:49+0000'
+				},
+				{
+					id: 4,
+					name: 'Workspace4',
+					isDisabled: false,
+					tags: null,
+					description: null,
+					created: '2016-10-03T20:09:35+0000',
+					modified: '2016-11-11T16:22:49+0000'
+				}
+			];
+
+			var params = {
+				attributes: 'name'
+			};
+
+			// `id` still comes back since it's mandatory
+			var expected = [
+				{
+					id: 3,
+					name: 'Workspace3',
+				},
+				{
+					id: 1,
+					name: 'Workspace1',
+				},
+				{
+					id: 4,
+					name: 'Workspace4',
+				}
+			];
+
+			expect(query.project(data, params)).to.deep.equal(expected);
+
 		});
 
 	});
 
-	describe('restrictToRelated', function() {
+	describe('timezone', function() {
 
-		it('should return an instance of itself', function() {
-
-			var query = Query();
-
-			expect(query.restrictToRelated()).to.be.eql(query);
-
-		});
-
-	});
-
-	describe('convertToTimezone', function() {
-
-		it('should not mutate the data', function() {
+		it('should not mutate the data (not implemented)', function() {
 
 			var data = {};
 
@@ -274,106 +287,36 @@ describe('znHttpFake (query)', function() {
 				timezone: 'America/New_York'
 			};
 
-			var query = Query(data, params);
-
-			expect(query.convertToTimezone().getResults()).to.be.eql({});
-
-		});
-
-		it('should return an instance of itself', function() {
-
-			var query = Query();
-
-			expect(query.convertToTimezone()).to.be.eql(query);
+			expect(query.timezone(data, params)).to.be.eql({});
 
 		});
 
 	});
 
-	describe('getCount', function() {
+	describe('count', function() {
 
 		it('should return the count when data is an array', function() {
-
-			var data = [1,2,3];
-
-			var query = Query(data);
-
-			expect(query.getCount()).to.be.equal(3);
-
+			expect(query.count([1,2,3])).to.be.equal(3);
 		});
 
 		it('should return the count when data is an object', function() {
-
-			var data = { id: 1 };
-
-			var query = Query(data);
-
-			expect(query.getCount()).to.be.equal(1);
-
+			expect(query.count({ id: 1 })).to.be.equal(1);
 		});
 
 		it('should return the count equal 1 when data is an empty object', function() {
-
-			var data = {};
-
-			var query = Query(data);
-
-			expect(query.getCount()).to.be.equal(1);
-
+			expect(query.count({})).to.be.equal(1);
 		});
 
 		it('should return the count equal zero when data is an empty array', function() {
-
-			var data = [];
-
-			var query = Query(data);
-
-			expect(query.getCount()).to.be.equal(0);
-
+			expect(query.count([])).to.be.equal(0);
 		});
 
 		it('should return the count equal zero when data is null', function() {
-
-			var data = null;
-
-			var query = Query(data);
-
-			expect(query.getCount()).to.be.equal(0);
-
+			expect(query.count(null)).to.be.equal(0);
 		});
 
 		it('should return the count equal zero when data is undefined', function() {
-
-			var data = undefined;
-
-			var query = Query(data);
-
-			expect(query.getCount()).to.be.equal(0);
-
-		});
-
-	});
-
-	describe('getResults', function() {
-
-		it('should get data back when data is an array', function() {
-
-			var data = [1,2,3];
-
-			var query = Query(data);
-
-			expect(query.getResults()).to.be.eql(data);
-
-		});
-
-		it('should get data back when data is an object', function() {
-
-			var data = { one: 1, two: 2 };
-
-			var query = Query(data);
-
-			expect(query.getResults()).to.be.eql(data);
-
+			expect(query.count(undefined)).to.be.equal(0);
 		});
 
 	});

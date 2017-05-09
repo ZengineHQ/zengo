@@ -3,7 +3,7 @@
 describe('ZnHttpFake (catch all)', function() {
 
 	var zengo = require('../index.js');
-	var Promise = require('bluebird');
+	var Api = require('../src/api.js');
 
 	describe('get', function() {
 
@@ -24,11 +24,13 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var check = function(results) {
-				expect(results.getBody().data).to.be.eql([{id:1, name:'Workspace1'}, {id:2, name:'Workspace2'}]);
+				expect(results).to.be.eql([{id:1, name:'Workspace1'}, {id:2, name:'Workspace2'}]);
 			};
 
-			return znHttpFake.get('/workspaces').then(check);
+			return api.get('/workspaces').then(check);
 
 		});
 
@@ -49,11 +51,13 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var check = function(results) {
-				expect(results.getBody()).to.be.eql({status: 200, code: 2000, totalCount: 2});
+				expect(results).to.be.equal(2);
 			};
 
-			return znHttpFake.get('/workspaces/count').then(check);
+			return api.count('/workspaces').then(check);
 
 		});
 
@@ -74,11 +78,13 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var check = function(results) {
-				expect(results.getBody().data).to.be.eql({id: 201, name: 'Workspace2' });
+				expect(results).to.be.eql({id: 201, name: 'Workspace2' });
 			};
 
-			return znHttpFake.get('/workspaces/201').then(check);
+			return api.get('/workspaces/201').then(check);
 
 		});
 
@@ -120,11 +126,13 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var check = function(results) {
-				expect(results.getBody().data).to.be.eql([{id:3, name:'Role3'},{id:4, name:'Role4'}]);
+				expect(results).to.be.eql([{id:3, name:'Role3'},{id:4, name:'Role4'}]);
 			};
 
-			return znHttpFake.get('/workspaces/201/roles').then(check);
+			return api.get('/workspaces/201/roles').then(check);
 
 		});
 
@@ -139,10 +147,6 @@ describe('ZnHttpFake (catch all)', function() {
 							{
 								id: 1,
 								name: 'Role1'
-							},
-							{
-								id: 2,
-								name: 'Role2'
 							}
 						]
 					},
@@ -150,6 +154,10 @@ describe('ZnHttpFake (catch all)', function() {
 						id: 201,
 						name: 'Workspace2',
 						roles: [
+							{
+								id: 2,
+								name: 'Role2'
+							},
 							{
 								id: 3,
 								name: 'Role3'
@@ -166,11 +174,13 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var check = function(results) {
-				expect(results.getBody()).to.be.eql({status: 200, code: 2000, totalCount: 2});
+				expect(results).to.be.equal(3);
 			};
 
-			return znHttpFake.get('/workspaces/201/roles/count').then(check);
+			return api.count('/workspaces/201/roles').then(check);
 
 		});
 
@@ -212,11 +222,13 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var check = function(results) {
-				expect(results.getBody().data).to.be.eql({id: 4, name: 'Role4'});
+				expect(results).to.be.eql({id: 4, name: 'Role4'});
 			};
 
-			return znHttpFake.get('/workspaces/201/roles/4').then(check);
+			return api.get('/workspaces/201/roles/4').then(check);
 
 		});
 
@@ -235,23 +247,25 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var save = function() {
-				return znHttpFake.post('/workspaces', data);
+				return api.post('/workspaces', data);
 			};
 
-			var checkSave = function(results) {
-				expect(results.getBody().data).to.be.eql({id:1, name:'Workspace1'});
+			var checkResponse = function(results) {
+				expect(results).to.be.eql({id:1, name:'Workspace1'});
 			};
 
-			var getCount = function() {
-				return znHttpFake.get('/workspaces/count');
+			var getData = function() {
+				return api.get('/workspaces');
 			};
 
-			var checkCount = function(results) {
-				expect(results.getBody()).to.be.eql({status: 200, code: 2000, totalCount: 1});
+			var checkData = function(results) {
+				expect(results).to.be.eql([{id:1, name:'Workspace1'}]);
 			};
 
-			return save().then(checkSave).then(getCount).then(checkCount);
+			return save().then(checkResponse).then(getData).then(checkData);
 
 		});
 
@@ -271,23 +285,31 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var save = function() {
-				return znHttpFake.post('/workspaces', data);
+				return api.post('/workspaces', data);
 			};
 
-			var checkSave = function(results) {
-				expect(results.getBody().data).to.be.eql({id:5, name:'Workspace5'});
+			var checkResponse = function(results) {
+				expect(results).to.be.eql({id:5, name:'Workspace5'});
 			};
 
-			var getCount = function() {
-				return znHttpFake.get('/workspaces/count');
+			var getData = function() {
+				return api.get('/workspaces');
 			};
 
-			var checkCount = function(results) {
-				expect(results.getBody()).to.be.eql({status: 200, code: 2000, totalCount: 4});
+			var checkData = function(results) {
+				var expected = [
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2' },
+					{ id: 4, name: 'Workspace4' },
+					{ id: 5, name: 'Workspace5' }
+				];
+				expect(results).to.be.eql(expected);
 			};
 
-			return save().then(checkSave).then(getCount).then(checkCount);
+			return save().then(checkResponse).then(getData).then(checkData);
 
 		});
 
@@ -308,23 +330,25 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var save = function() {
-				return znHttpFake.post('/workspaces/101/roles', data);
+				return api.post('/workspaces/101/roles', data);
 			};
 
-			var checkSave = function(results) {
-				expect(results.getBody().data).to.be.eql({id:1, name:'Role1'});
+			var checkResponse = function(results) {
+				expect(results).to.be.eql({id:1, name:'Role1'});
 			};
 
-			var getCount = function() {
-				return znHttpFake.get('/workspaces/101/roles/count');
+			var getData = function() {
+				return api.get('/workspaces/101/roles');
 			};
 
-			var checkCount = function(results) {
-				expect(results.getBody()).to.be.eql({status: 200, code: 2000, totalCount: 1});
+			var checkData = function(results) {
+				expect(results).to.be.eql([{id:1, name:'Role1'}]);
 			};
 
-			return save().then(checkSave).then(getCount).then(checkCount);
+			return save().then(checkResponse).then(getData).then(checkData);
 
 		});
 
@@ -351,23 +375,29 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var save = function() {
-				return znHttpFake.post('/workspaces/101/roles', data);
+				return api.post('/workspaces/101/roles', data);
 			};
 
-			var checkSave = function(results) {
-				expect(results.getBody().data).to.be.eql({id:202, name:'Role2'});
+			var checkResponse = function(results) {
+				expect(results).to.be.eql({id:202, name:'Role2'});
 			};
 
-			var getCount = function() {
-				return znHttpFake.get('/workspaces/101/roles/count');
+			var getData = function() {
+				return api.get('/workspaces/101/roles');
 			};
 
-			var checkCount = function(results) {
-				expect(results.getBody()).to.be.eql({status: 200, code: 2000, totalCount: 2});
+			var checkData = function(results) {
+				var expected = [
+					{ id: 201, name: 'Role1' },
+					{ id: 202, name: 'Role2' }
+				];
+				expect(results).to.be.eql(expected);
 			};
 
-			return save().then(checkSave).then(getCount).then(checkCount);
+			return save().then(checkResponse).then(getData).then(checkData);
 
 		});
 
@@ -391,23 +421,30 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var save = function() {
-				return znHttpFake.put('/workspaces/2', data);
+				return api.put('/workspaces/2', data);
 			};
 
-			var checkSave = function(results) {
-				expect(results.getBody().data).to.be.eql({id:2, name:'Workspace2 updated'});
+			var checkResponse = function(results) {
+				expect(results).to.be.eql({id:2, name:'Workspace2 updated'});
 			};
 
-			var getCount = function() {
-				return znHttpFake.get('/workspaces/count');
+			var getData = function() {
+				return api.get('/workspaces');
 			};
 
-			var checkCount = function(results) {
-				expect(results.getBody()).to.be.eql({status: 200, code: 2000, totalCount: 3});
+			var checkData = function(results) {
+				var expected = [
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2 updated' },
+					{ id: 4, name: 'Workspace4' }
+				];
+				expect(results).to.be.eql(expected);
 			};
 
-			return save().then(checkSave).then(getCount).then(checkCount);
+			return save().then(checkResponse).then(getData).then(checkData);
 
 		});
 
@@ -434,23 +471,29 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var save = function() {
-				return znHttpFake.put('/workspaces/4/roles/202', data);
+				return api.put('/workspaces/4/roles/202', data);
 			};
 
-			var checkSave = function(results) {
-				expect(results.getBody().data).to.be.eql({id:202, name:'Role2 updated'});
+			var checkResponse = function(results) {
+				expect(results).to.be.eql({id:202, name:'Role2 updated'});
 			};
 
-			var getCount = function() {
-				return znHttpFake.get('/workspaces/4/roles/count');
+			var getData = function() {
+				return api.get('/workspaces/4/roles');
 			};
 
-			var checkCount = function(results) {
-				expect(results.getBody()).to.be.eql({status: 200, code: 2000, totalCount: 2});
+			var checkData = function(results) {
+				var expected = [
+					{ id: 201, name: 'Role1' },
+					{ id: 202, name: 'Role2 updated' }
+				];
+				expect(results).to.be.eql(expected);
 			};
 
-			return save().then(checkSave).then(getCount).then(checkCount);
+			return save().then(checkResponse).then(getData).then(checkData);
 
 		});
 
@@ -470,27 +513,33 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var del = function() {
-				return znHttpFake.del('/workspaces/2');
+				return api.del('/workspaces/2');
 			};
 
-			var checkDelete = function(results) {
-				expect(results.getBody().data).to.be.undefined;
+			var checkReponse = function(results) {
+				expect(results).to.be.undefined;
 			};
 
-			var getCount = function() {
-				return znHttpFake.get('/workspaces/count');
+			var getData = function() {
+				return api.get('/workspaces');
 			};
 
-			var checkCount = function(results) {
-				expect(results.getBody()).to.be.eql({status: 200, code: 2000, totalCount: 2});
+			var checkData = function(results) {
+				var expected = [
+					{ id: 1, name: 'Workspace1' },
+					{ id: 4, name: 'Workspace4' }
+				];
+				expect(results).to.be.eql(expected);
 			};
 
-			return del().then(checkDelete).then(getCount).then(checkCount);
+			return del().then(checkReponse).then(getData).then(checkData);
 
 		});
 
-		it('should save delete for /:resource/:resourceId/:subResource/:subResourceId', function() {
+		it('should delete for /:resource/:resourceId/:subResource/:subResourceId', function() {
 
 			var datum = {
 				workspaces: [
@@ -509,23 +558,25 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var znHttpFake = zengo.znHttpFake(datum);
 
+			var api = Api(znHttpFake);
+
 			var del = function() {
-				return znHttpFake.del('/workspaces/4/roles/202');
+				return api.del('/workspaces/4/roles/202');
 			};
 
-			var checkDelete = function(results) {
-				expect(results.getBody().data).to.be.undefined;
+			var checkResponse = function(results) {
+				expect(results).to.be.undefined;
 			};
 
-			var getCount = function() {
-				return znHttpFake.get('/workspaces/4/roles/count');
+			var getData = function() {
+				return api.get('/workspaces/4/roles');
 			};
 
-			var checkCount = function(results) {
-				expect(results.getBody()).to.be.eql({status: 200, code: 2000, totalCount: 1});
+			var checkData = function(results) {
+				expect(results).to.be.eql([{ id: 201, name: 'Role1' }]);
 			};
 
-			return del().then(checkDelete).then(getCount).then(checkCount);
+			return del().then(checkResponse).then(getData).then(checkData);
 
 		});
 
