@@ -20,7 +20,7 @@ describe('Firebase fake', function() {
 			}
 		};
 
-		var firebase = new Firebase(data);
+		var firebase = new Firebase(null, data);
 
 		var ref = firebase.child('settings/forms');
 

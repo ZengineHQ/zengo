@@ -3,7 +3,7 @@
 var get = require('lodash.get');
 var set = require('lodash.set');
 
-var createFirebase = function(data, path) {
+var createFirebase = function(path, data) {
 
 	var fb = {};
 
@@ -18,7 +18,7 @@ var createFirebase = function(data, path) {
 		} else {
 			newPath = path;
 		}
-		return createFirebase(fb.data, newPath);
+		return createFirebase(newPath, fb.data);
 	};
 
 	var objPath = function() {
