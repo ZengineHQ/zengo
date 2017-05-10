@@ -7,17 +7,9 @@ var createFirebase = function(path, data) {
 
 	var fb = {};
 
-	if (!path) {
-		path = '';
-	}
+	fb.path = path || '';
 
-	fb.path = path;
-
-	if (!data) {
-		data = {};
-	}
-
-	fb.data = data;
+	fb.data = data || {};
 
 	fb.child = function(path) {
 		var newPath;
