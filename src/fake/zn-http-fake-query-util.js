@@ -46,6 +46,10 @@ queryUtil.getFilterParam = function(params) {
 
 	var filter = get(params, 'filter');
 
+	if (typeof filter === 'string') {
+		try { filter = JSON.parse(filter); } catch(e) {};
+	}
+
 	return filter ? filter : undefined;
 };
 
@@ -82,7 +86,7 @@ queryUtil.getTimezoneParam = function(params) {
 	return timezone ? timezone : undefined;
 };
 
-queryUtil.getConditionalParams = function(params) {
+queryUtil.getQueryParamsFilter = function(params) {
 
 	// todo: add support for all
 	//
@@ -113,10 +117,6 @@ queryUtil.getConditionalParams = function(params) {
 
 	return conditions.length ? conditions : undefined;
 
-};
-
-queryUtil.conditionalParamsToFilter = function(params) {
-	return {and:[{}]};
 };
 
 module.exports = queryUtil;
