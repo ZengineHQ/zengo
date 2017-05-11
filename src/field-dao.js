@@ -7,7 +7,7 @@ var FieldDao = function(api, formId) {
 	var endpoint = ['/forms', formId, 'fields'].join('/');
 
 	dao.get = function(fieldId) {
-		return api.get(endpoint + '/' + fieldId, request);
+		return api.get(endpoint + '/' + fieldId);
 	};
 
 	dao.query = function(request) {

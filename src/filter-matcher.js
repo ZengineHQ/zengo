@@ -32,7 +32,7 @@ var createFilterMatcher = function() {
 
 		return formatted;
 
-	};
+	}
 
 	// Matchers for each rule "prefix" type
 	var matchers = {
@@ -42,7 +42,7 @@ var createFilterMatcher = function() {
 				return false;
 			}
 
-			return String(ruleValue).toLowerCase() == String(recordValue).toLowerCase();
+			return String(ruleValue).toLowerCase() === String(recordValue).toLowerCase();
 
 		},
 		ruleDoesNotEqual: function(recordValue, ruleValue) {
@@ -51,7 +51,7 @@ var createFilterMatcher = function() {
 				return false;
 			}
 
-			return String(ruleValue).toLowerCase() != String(recordValue).toLowerCase();
+			return String(ruleValue).toLowerCase() !== String(recordValue).toLowerCase();
 
 		},
 		ruleMinimum: function(recordValue, ruleValue) {
@@ -82,7 +82,7 @@ var createFilterMatcher = function() {
 
 			// Loose comparison; don't use 'localeCompare' because we only want to compare
 			// numbers or well-formatted dates, which work with normal string comparison
-			return (recordValue >= ruleValue);
+			return recordValue >= ruleValue;
 		},
 		ruleMaximum: function(recordValue, ruleValue) {
 
@@ -113,7 +113,7 @@ var createFilterMatcher = function() {
 
 			// Loose comparison; don't use 'localeCompare' because we only want to compare
 			// numbers or well-formatted dates, which work with normal string comparison
-			return (recordValue <= ruleValue);
+			return recordValue <= ruleValue;
 
 		},
 		ruleContains: function(recordValue, ruleValue) {
@@ -201,7 +201,7 @@ var createFilterMatcher = function() {
 		// All ruleValues failed to match
 		return false;
 
-	};
+	}
 
 	/**
 	 * Helper - parse rule values from filter rule
@@ -210,7 +210,7 @@ var createFilterMatcher = function() {
 	 */
 	function getRuleValues(rule) {
 
-		if (typeof rule.value == 'string' && rule.value.indexOf('|') !== -1) {
+		if (typeof rule.value === 'string' && rule.value.indexOf('|') !== -1) {
 			return rule.value.split('|');
 		}
 
@@ -220,7 +220,7 @@ var createFilterMatcher = function() {
 
 		return [rule.value];
 
-	};
+	}
 
 	/**
 	 * Helper - get the needed record value for comparison against this rule
@@ -249,7 +249,7 @@ var createFilterMatcher = function() {
 
 		return recordValue;
 
-	};
+	}
 
 	/**
 	 * Determine whether the given record matches the given filter
@@ -265,17 +265,17 @@ var createFilterMatcher = function() {
 
 		for (var i in filter[currentOperator]) {
 			var match = recordMatchesRule(record, filter[currentOperator][i]);
-			if (currentOperator == 'or' && match) {
+			if (currentOperator === 'or' && match) {
 				return true;
 			}
-			if (currentOperator == 'and' && !match) {
+			if (currentOperator === 'and' && !match) {
 				return false;
 			}
 		}
 
 		// "and" - no misses by this point, return true
 		// "or" - no matches by this point, return false
-		return (currentOperator == 'and');
+		return currentOperator === 'and';
 
 	};
 

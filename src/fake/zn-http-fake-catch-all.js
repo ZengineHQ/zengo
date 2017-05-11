@@ -2,7 +2,6 @@
 
 var Promise = require('bluebird');
 var RoutePattern = require('route-pattern');
-var set = require('lodash.set');
 var get = require('lodash.get');
 var isObject = require('lodash.isobject');
 var forEach = require('lodash.foreach');
@@ -234,11 +233,9 @@ var fakeDao = function(datum) {
 			return;
 		}
 
-		if (namedParams.subResourceId) {
-			var path = ['/', namedParams.resource, namedParams.resourceId, namedParams.subResource];
-		} else {
-			var path = ['/', namedParams.resource];
-		}
+		var path = namedParams.subResourceId ?
+			['/', namedParams.resource, namedParams.resourceId, namedParams.subResource] :
+			['/', namedParams.resource];
 
 		var data = getPath(path.join('/'));
 
