@@ -6,16 +6,15 @@ var forEach = require('lodash.foreach');
 
 var queryUtil = {};
 
-var reservedParams = [
-	'page',
-	'limit',
-	'sort',
-	'direction',
-	'filter', // only on form records
-	'attributes',
-	'related',
-	'timezone'
-];
+// Reserved params
+// 'page',
+// 'limit',
+// 'sort',
+// 'direction',
+// 'filter', // only on form records
+// 'attributes',
+// 'related',
+// 'timezone'
 
 queryUtil.getPaginateParams = function(params) {
 
