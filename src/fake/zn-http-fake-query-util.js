@@ -1,20 +1,30 @@
 'use strict';
 
 var get = require('lodash.get');
-var attribute = require('../attribute');
 var forEach = require('lodash.foreach');
 
 var queryUtil = {};
 
-// Reserved params
-// 'page',
-// 'limit',
-// 'sort',
-// 'direction',
-// 'filter', // only on form records
-// 'attributes',
-// 'related',
-// 'timezone'
+var reservedQueryParams = [
+	'page',
+	'limit',
+	'sort',
+	'direction',
+	'filter', // only on form records endpoint
+	'attributes',
+	'related',
+	'timezone'
+];
+
+var filterPrefixes = [
+	'not',
+	'contains',
+	'not-contains',
+	'starts-with',
+	'ends-with',
+	'min',
+	'max'
+];
 
 queryUtil.getPaginateParams = function(params) {
 
@@ -46,7 +56,7 @@ queryUtil.getFilterParam = function(params) {
 	var filter = get(params, 'filter');
 
 	if (typeof filter === 'string') {
-		try { filter = JSON.parse(filter); } catch(e) {};
+		try { filter = JSON.parse(filter); } catch(e) {}
 	}
 
 	return filter ? filter : undefined;
@@ -85,36 +95,62 @@ queryUtil.getTimezoneParam = function(params) {
 	return timezone ? timezone : undefined;
 };
 
-queryUtil.getQueryParamsFilter = function(params) {
+queryUtil.getQueryParamsFilter = function(allParams) {
 
-	// todo: add support for all
-	//
-	// ?attribute=value: attribute equals value
-	// ?not-attribute=value: attribute does not equal value
-	// ?contains-attribute=value: attribute contains value
-	// ?not-contains-attribute=value: attribute does not contain value
-	// ?starts-with-attribute=value: attribute starts with value
-	// ?ends-with-attribute=value: attribute ends with value
-	// ?min-attribute=5: attribute is at least 5
-	// ?max-attribute=10: attribute is no more than 10
+	var params = {};
+
+	forEach(allParams, function(paramValue, paramName) {
+		if (reservedQueryParams.indexOf(paramName) === -1) {
+			params[paramName] = paramValue;
+		}
+	});
 
 	var conditions = [];
 
 	forEach(params, function(paramValue, paramName) {
 
-		// /^field[0-9]+/
-		if (attribute.isField(paramName) && get(params, paramName)) {
-			var condition = {
-				prefix: '',
-				attribute: paramName,
-				value: paramValue
-			};
-			conditions.push(condition);
+		var prefix = '';
+		var attribute = paramName;
+		var value = paramValue;
+
+		forEach(filterPrefixes, function(filterPrefix) {
+			if (paramName.startsWith(filterPrefix + '-')) {
+				prefix = filterPrefix;
+				attribute = paramName.substr(filterPrefix.length + 1);
+			}
+		});
+
+		var hasPipes = value.toString().indexOf('|') > -1;
+
+		if (hasPipes) {
+
+			var values = value.split('|');
+			var subConditions = [];
+
+			forEach(values, function(value) {
+				subConditions.push({
+					prefix: prefix,
+					attribute: attribute,
+					value: value
+				});
+			});
+
+			conditions.push({and: subConditions});
+
+			return;
+
 		}
+
+		conditions.push({
+			prefix: prefix,
+			attribute: attribute,
+			value: value
+		});
+
 
 	});
 
-	return conditions.length ? conditions : undefined;
+	return conditions.length ? { and: conditions } : undefined;
 
 };
 

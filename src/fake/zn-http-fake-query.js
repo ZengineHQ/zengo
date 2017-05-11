@@ -39,17 +39,17 @@ fakeQuery.sortAndPaginate = function(data, params) {
 
 	var paginate = util.getPaginateParams(params);
 
-	if (!data || !paginate) {
-		return data;
+	if (data && paginate) {
+
+		var page = paginate.page || 1;
+
+		var limit = paginate.limit || 20;
+
+		--page;
+
+		data = data.slice(page * limit, (page + 1) * limit);
+
 	}
-
-	var page = paginate.page || 1;
-
-	var limit = paginate.limit || 20;
-
-	--page;
-
-	data = data.slice(page * limit, (page + 1) * limit);
 
 	return data;
 
