@@ -14,26 +14,15 @@ fakeQuery.filter = function(data, params) {
 	// todo: needs a lot of work to be close
 	// to what the api does
 
-	var conditionalParams = util.getConditionalParams(params);
+	var filter;
 
-	var filterParam = util.getFilterParam(params);
+	filter = util.getFilterParam(params) || util.getQueryParamsFilter(params);
 
-	if (!conditionalParams && !filterParam) {
-		return data;
+	if (filter) {
+		data = data.filter(function(record) {
+			return recordMatchesFilter(record, filter);
+		});
 	}
-
-	// var filter = util.conditionalParamsToFilter(conditionalParams);
-
-	// todo: check does the api merge both
-	// conditional params and a filter?
-
-	// if (!filter) {
-	// 	return data;
-	// }
-
-	data = data.filter(function(record) {
-		return recordMatchesFilter(record, filterParam);
-	});
 
 	return data;
 
