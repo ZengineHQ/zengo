@@ -1,6 +1,5 @@
 'use strict';
 
-var get = require('lodash.get');
 var util = require('./zn-http-fake-query-util');
 var orderBy = require('lodash.orderby');
 var forEach = require('lodash.foreach');
@@ -107,11 +106,11 @@ fakeQuery.timezone = function(data, params) {
 
 fakeQuery.count = function(data) {
 
-	if ((!!data) && (data.constructor === Array)) {
+	if (!!data && data.constructor === Array) {
 		return data.length || 0;
 	}
 
-	if ((!!data) && (data.constructor === Object)) {
+	if (!!data && data.constructor === Object) {
 		return 1;
 	}
 
