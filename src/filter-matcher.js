@@ -2,6 +2,9 @@
 
 // from https://github.com/Wizehive/anglerfish/blob/stage/app/js/core/services/zn-filter-matcher.js
 
+var isEmpty = require('lodash.isempty');
+var all = require('lodash.every');
+var any = require('lodash.some');
 var BigNumber = require('bignumber.js');
 
 var createFilterMatcher = function() {
@@ -251,31 +254,25 @@ var createFilterMatcher = function() {
 
 	}
 
-	/**
-	 * Determine whether the given record matches the given filter
-	 */
 	filterMatcher.recordMatchesFilter = function(record, filter) {
 
-		var currentOperator = Object.keys(filter)[0];
+		var aggregationType = Object.keys(filter)[0];
+		var conditions = filter[aggregationType];
+		var matches = function(condition) {
+			return recordMatchesRule(record, condition);
+		};
 
-		if (filter[currentOperator].length === 0) {
-			// Empty filter / no rules - considered a "match all"
+		if (isEmpty(conditions)) {
 			return true;
 		}
 
-		for (var i in filter[currentOperator]) {
-			var match = recordMatchesRule(record, filter[currentOperator][i]);
-			if (currentOperator === 'or' && match) {
-				return true;
-			}
-			if (currentOperator === 'and' && !match) {
-				return false;
-			}
+		if (aggregationType === 'and') {
+			return all(conditions, matches);
 		}
 
-		// "and" - no misses by this point, return true
-		// "or" - no matches by this point, return false
-		return currentOperator === 'and';
+		if (aggregationType === 'or') {
+			return any(conditions, matches);
+		}
 
 	};
 
