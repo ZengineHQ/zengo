@@ -225,22 +225,26 @@ var BigNumber = require('bignumber.js');
 	}
 
 	function recordMatchesValueCondition(record, condition) {
-		var recordValue = getRecordValue(record, condition);
+		var actualValue = getRecordValue(record, condition);
 		var expectedValues = getConditionValues(condition);
 
-		var match = matchers[
+		var matchesCondition = matchers[
 			ruleFunctionMap[condition.prefix]
 		];
-		var valueMatches = function(expectedValue) {
-			return match(recordValue, expectedValue);
+		var matchesAsExpected = function(expectedValue) {
+			return matchesCondition(actualValue, expectedValue);
 		};
-		return any(expectedValues, valueMatches);
+		return any(expectedValues, matchesAsExpected);
 	}
 
 	function recordMatchesFilter(record, filter) {
 
 		var aggregationType = Object.keys(filter)[0];
 		var conditions = filter[aggregationType];
+
+		if (isEmpty(conditions)) {
+			return true;
+		}
 
 		var matches = function(condition) {
 			assertSupportedCondition(condition);
@@ -250,10 +254,6 @@ var BigNumber = require('bignumber.js');
 			}
 			return recordMatchesValueCondition(record, condition);
 		};
-
-		if (isEmpty(conditions)) {
-			return true;
-		}
 
 		if (aggregationType === 'and') {
 			return all(conditions, matches);
