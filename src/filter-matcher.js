@@ -4,6 +4,7 @@
 
 var isEmpty = require('lodash.isempty');
 var has = require('lodash.has');
+var get = require('lodash.get');
 var all = require('lodash.every');
 var any = require('lodash.some');
 var BigNumber = require('bignumber.js');
@@ -183,33 +184,26 @@ var createFilterMatcher = function() {
 
 	}
 
-	/**
-	 * Helper - get the needed record value for comparison against this rule
-	 */
-	function getRecordValue(record, rule) {
+	function getRecordObjValue(value) {
+		if (value.value !== undefined) {
+			// file-upload
+			return value.value;
+		}
+		if (value.id !== undefined) {
+			// linked and member
+			return value.id;
+		}
+	}
 
-		var attributePieces = rule.attribute.split(".");
-
-		// Parse current record value of this rule's attribute, including dotted names (e.g. "folder.id")
-		var recordValue = record;
-
-		attributePieces.forEach(function(attributePiece) {
-			recordValue = recordValue && recordValue[attributePiece];
-		});
-
-		// Parse subobject properties to use for check - e.g. field123.value for upload, field456.id for linked/member
-		if (recordValue instanceof Object) {
-			if (recordValue.value !== undefined) {
-				recordValue = recordValue.value;
-			} else if (recordValue.id !== undefined) {
-				recordValue = recordValue.id;
-			}
-		} else if (recordValue === null || recordValue === undefined) {
+	function getRecordValue(record, condition) {
+		var recordValue = get(record, condition.attribute);
+		if (recordValue === null || recordValue === undefined) {
 			return '';
 		}
-
+		if (recordValue instanceof Object) {
+			return getRecordObjValue(recordValue);
+		}
 		return recordValue;
-
 	}
 
 	function isFilter(condition) {
