@@ -91,7 +91,7 @@ var fakeDao = function(datum) {
 
 		var data = getPath(endpoint);
 
-		var params = get('options', 'params');
+		var params = get(options, 'params');
 
 		if (endpoint && endpoint.endsWith('/count')) {
 

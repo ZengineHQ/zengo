@@ -18,6 +18,12 @@ var createApi = function(znHttp) {
 				separator = ',';
 			}
 
+			if (paramKey === 'filter' && isObject(paramValue)) {
+				paramValue = JSON.stringify(paramValue);
+				assembled[paramKey] = paramValue;
+				return assembled;
+			}
+
 			if (Array.isArray(paramValue)) {
 				paramValue = paramValue.join(separator);
 				assembled[paramKey] = paramValue;
