@@ -858,6 +858,70 @@ describe('ZnHttpFake (catch all)', function() {
 
 		});
 
+		it('should return all results for empty `and` filter', function() {
+
+			var datum = {
+				workspaces: [
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2' },
+					{ id: 3, name: 'Workspace3' },
+				]
+			};
+
+			var znHttpFake = zengo.znHttpFake(datum);
+
+			var api = Api(znHttpFake);
+
+			var params = {
+				filter: {
+					and: []
+				}
+			};
+
+			var check = function(results) {
+				expect(results.data).to.eql([
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2' },
+					{ id: 3, name: 'Workspace3' },
+				]);
+			};
+
+			return api.query('/workspaces', params).then(check);
+
+		});
+
+		it('should return all results for empty `or` filter', function() {
+
+			var datum = {
+				workspaces: [
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2' },
+					{ id: 3, name: 'Workspace3' },
+				]
+			};
+
+			var znHttpFake = zengo.znHttpFake(datum);
+
+			var api = Api(znHttpFake);
+
+			var params = {
+				filter: {
+					or: []
+				}
+			};
+
+			var check = function(results) {
+				expect(results.data).to.eql([
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2' },
+					{ id: 3, name: 'Workspace3' },
+				]);
+			};
+
+			return api.query('/workspaces', params).then(check);
+
+		});
+
 	});
 
 	describe('filtering with query params', function() {
