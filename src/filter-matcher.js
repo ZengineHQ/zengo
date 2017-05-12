@@ -3,6 +3,7 @@
 // from https://github.com/Wizehive/anglerfish/blob/stage/app/js/core/services/zn-filter-matcher.js
 
 var isEmpty = require('lodash.isempty');
+var has = require('lodash.has');
 var all = require('lodash.every');
 var any = require('lodash.some');
 var BigNumber = require('bignumber.js');
@@ -37,7 +38,6 @@ var createFilterMatcher = function() {
 
 	}
 
-	// Matchers for each rule "prefix" type
 	var matchers = {
 		ruleEquals: function(recordValue, ruleValue) {
 
@@ -169,22 +169,17 @@ var createFilterMatcher = function() {
 		}
 	};
 
-	/**
-	 * Helper - parse rule values from filter rule
-	 * If rule contains piped values, splits them into an array; otherwise
-	 * yields an array-wrapped version of the single rule value for consistency
-	 */
-	function getRuleValues(rule) {
+	function getConditionValues(condition) {
 
-		if (typeof rule.value === 'string' && rule.value.indexOf('|') !== -1) {
-			return rule.value.split('|');
+		if (typeof condition.value === 'string' && condition.value.indexOf('|') !== -1) {
+			return condition.value.split('|');
 		}
 
-		if (rule.value === 'null' || rule.value === null) {
+		if (condition.value === 'null' || condition.value === null) {
 			return [''];
 		}
 
-		return [rule.value];
+		return [condition.value];
 
 	}
 
@@ -217,41 +212,49 @@ var createFilterMatcher = function() {
 
 	}
 
-	/**
-	 * Determine whether the given record matches the given filter rule
-	 */
-	function recordMatchesRule(record, rule) {
+	function isFilter(condition) {
+		return has(condition, 'and') || has(condition, 'or');
+	}
 
-		var operators = ["and", "or"];
+	function isSubfilter(condition) {
+		return condition.filter !== undefined;
+	}
 
-		if (operators.indexOf(Object.keys(rule)[0]) !== -1) {
-			// Rule contains "and"/"or" key - nested filter
-			return filterMatcher.recordMatchesFilter(record, rule);
-		}
+	function isDynamicCondition(condition) {
+		return typeof condition.value === 'string' &&
+			condition.value.split('|').indexOf('logged-in-user') !== -1;
+	}
 
-		if (rule.filter !== undefined) {
+	function assertSupportedCondition(condition) {
+		if (isSubfilter(condition)) {
 			throw new Error("Subfilter matching is not supported");
 		}
-
-		if (typeof rule.value === 'string' && rule.value.split('|').indexOf('logged-in-user') !== -1) {
-			throw new Error ("Dynamic filter conditions are not supported");
+		if (isDynamicCondition(condition)) {
+			throw new Error("Dynamic filter conditions are not supported");
 		}
+	}
 
-		// From here, we know we have a normal rule with "prefix", "attribute", and "value" properties.
-		var recordValue = getRecordValue(record, rule);
-		var ruleValues = getRuleValues(rule);
+	function recordMatchesValueCondition(record, condition) {
+		var recordValue = getRecordValue(record, condition);
+		var expectedValues = getConditionValues(condition);
 
-		// Run actual match logic based on rule prefix
-		var matchFunction = ruleFunctionMap[rule.prefix];
-		for (var i in ruleValues) {
-			if (matchers[matchFunction](recordValue, ruleValues[i])) {
-				return true;
-			}
+		var match = matchers[
+			ruleFunctionMap[condition.prefix]
+		];
+		var valueMatches = function(expectedValue) {
+			return match(recordValue, expectedValue);
+		};
+		return any(expectedValues, valueMatches);
+	}
+
+	function recordMatchesRule(record, condition) {
+
+		assertSupportedCondition(condition);
+
+		if (isFilter(condition)) {
+			return filterMatcher.recordMatchesFilter(record, condition);
 		}
-
-		// All ruleValues failed to match
-		return false;
-
+		return recordMatchesValueCondition(record, condition);
 	}
 
 	filterMatcher.recordMatchesFilter = function(record, filter) {
