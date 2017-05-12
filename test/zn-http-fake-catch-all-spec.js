@@ -605,11 +605,6 @@ describe('ZnHttpFake (catch all)', function() {
 			};
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 3, name: 'Workspace3' } ]);
 			};
 
@@ -645,11 +640,6 @@ describe('ZnHttpFake (catch all)', function() {
 			};
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 3, name: 'Workspace3' } ]);
 			};
 
@@ -678,11 +668,6 @@ describe('ZnHttpFake (catch all)', function() {
 			};
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 3, name: 'Workspace3' } ]);
 			};
 
@@ -718,11 +703,6 @@ describe('ZnHttpFake (catch all)', function() {
 			};
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 2, name: 'Workspace2' } ]);
 			};
 
@@ -751,11 +731,6 @@ describe('ZnHttpFake (catch all)', function() {
 			};
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 2, name: 'The second workspace2' } ]);
 			};
 
@@ -784,11 +759,6 @@ describe('ZnHttpFake (catch all)', function() {
 			};
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 3, name: 'Workspace3' } ]);
 			};
 
@@ -817,11 +787,6 @@ describe('ZnHttpFake (catch all)', function() {
 			};
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(2);
 				expect(results.data).to.eql([ { id: 4, name: 'Workspace4' }, { id: 5, name: 'Workspace5' } ]);
 			};
 
@@ -850,11 +815,6 @@ describe('ZnHttpFake (catch all)', function() {
 			};
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(2);
 				expect(results.data).to.eql([{ id: 1, name: 'Workspace1' }, { id: 2, name: 'Workspace2' }]);
 			};
 
@@ -885,11 +845,6 @@ describe('ZnHttpFake (catch all)', function() {
 			var params = { id: 3 };
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 3, name: 'Workspace3' } ]);
 			};
 
@@ -916,11 +871,6 @@ describe('ZnHttpFake (catch all)', function() {
 			var params = { 'not-id': '1|2|4|5' };
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 3, name: 'Workspace3' } ]);
 			};
 
@@ -947,11 +897,6 @@ describe('ZnHttpFake (catch all)', function() {
 			var params = { 'contains-name': 'space3' };
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 3, name: 'Workspace3' } ]);
 			};
 
@@ -978,11 +923,6 @@ describe('ZnHttpFake (catch all)', function() {
 			var params = { 'not-contains-name': 'space1|space3|space4|space5' };
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 2, name: 'Workspace2' } ]);
 			};
 
@@ -1009,11 +949,6 @@ describe('ZnHttpFake (catch all)', function() {
 			var params = { 'contains-name': 'The second' };
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 2, name: 'The second workspace2' } ]);
 			};
 
@@ -1040,11 +975,6 @@ describe('ZnHttpFake (catch all)', function() {
 			var params = { 'ends-with-name': 'space3' };
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(1);
 				expect(results.data).to.eql([ { id: 3, name: 'Workspace3' } ]);
 			};
 
@@ -1071,11 +1001,6 @@ describe('ZnHttpFake (catch all)', function() {
 			var params = { 'min-id': 4 };
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(2);
 				expect(results.data).to.eql([ { id: 4, name: 'Workspace4' }, { id: 5, name: 'Workspace5' } ]);
 			};
 
@@ -1102,11 +1027,6 @@ describe('ZnHttpFake (catch all)', function() {
 			var params = { 'max-id': 2 };
 
 			var check = function(results) {
-				expect(results.status).to.equal(200);
-				expect(results.code).to.equal(2000);
-				expect(results.limit).to.equal(20);
-				expect(results.offset).to.equal(0);
-				expect(results.totalCount).to.equal(2);
 				expect(results.data).to.eql([ { id: 1, name: 'Workspace1' }, { id: 2, name: 'Workspace2' } ]);
 			};
 
