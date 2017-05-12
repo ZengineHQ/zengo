@@ -167,43 +167,6 @@ var createFilterMatcher = function() {
 	};
 
 	/**
-	 * Determine whether the given record matches the given filter rule
-	 */
-	function recordMatchesRule(record, rule) {
-
-		var operators = ["and", "or"];
-
-		if (operators.indexOf(Object.keys(rule)[0]) !== -1) {
-			// Rule contains "and"/"or" key - nested filter
-			return filterMatcher.recordMatchesFilter(record, rule);
-		}
-
-		if (rule.filter !== undefined) {
-			throw new Error("Subfilter matching is not supported");
-		}
-
-		if (typeof rule.value === 'string' && rule.value.split('|').indexOf('logged-in-user') !== -1) {
-			throw new Error ("Dynamic filter conditions are not supported");
-		}
-
-		// From here, we know we have a normal rule with "prefix", "attribute", and "value" properties.
-		var recordValue = getRecordValue(record, rule);
-		var ruleValues = getRuleValues(rule);
-
-		// Run actual match logic based on rule prefix
-		var matchFunction = ruleFunctionMap[rule.prefix];
-		for (var i in ruleValues) {
-			if (matchers[matchFunction](recordValue, ruleValues[i])) {
-				return true;
-			}
-		}
-
-		// All ruleValues failed to match
-		return false;
-
-	}
-
-	/**
 	 * Helper - parse rule values from filter rule
 	 * If rule contains piped values, splits them into an array; otherwise
 	 * yields an array-wrapped version of the single rule value for consistency
@@ -248,6 +211,43 @@ var createFilterMatcher = function() {
 		}
 
 		return recordValue;
+
+	}
+
+	/**
+	 * Determine whether the given record matches the given filter rule
+	 */
+	function recordMatchesRule(record, rule) {
+
+		var operators = ["and", "or"];
+
+		if (operators.indexOf(Object.keys(rule)[0]) !== -1) {
+			// Rule contains "and"/"or" key - nested filter
+			return filterMatcher.recordMatchesFilter(record, rule);
+		}
+
+		if (rule.filter !== undefined) {
+			throw new Error("Subfilter matching is not supported");
+		}
+
+		if (typeof rule.value === 'string' && rule.value.split('|').indexOf('logged-in-user') !== -1) {
+			throw new Error ("Dynamic filter conditions are not supported");
+		}
+
+		// From here, we know we have a normal rule with "prefix", "attribute", and "value" properties.
+		var recordValue = getRecordValue(record, rule);
+		var ruleValues = getRuleValues(rule);
+
+		// Run actual match logic based on rule prefix
+		var matchFunction = ruleFunctionMap[rule.prefix];
+		for (var i in ruleValues) {
+			if (matchers[matchFunction](recordValue, ruleValues[i])) {
+				return true;
+			}
+		}
+
+		// All ruleValues failed to match
+		return false;
 
 	}
 
