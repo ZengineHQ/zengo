@@ -9,10 +9,6 @@ var all = require('lodash.every');
 var any = require('lodash.some');
 var BigNumber = require('bignumber.js');
 
-var createFilterMatcher = function() {
-
-	var filterMatcher = {};
-
 	var ruleFunctionMap = {
 		'': 'ruleEquals',
 		'not': 'ruleDoesNotEqual',
@@ -241,22 +237,18 @@ var createFilterMatcher = function() {
 		return any(expectedValues, valueMatches);
 	}
 
-	function recordMatchesRule(record, condition) {
-
-		assertSupportedCondition(condition);
-
-		if (isFilter(condition)) {
-			return filterMatcher.recordMatchesFilter(record, condition);
-		}
-		return recordMatchesValueCondition(record, condition);
-	}
-
-	filterMatcher.recordMatchesFilter = function(record, filter) {
+	function recordMatchesFilter(record, filter) {
 
 		var aggregationType = Object.keys(filter)[0];
 		var conditions = filter[aggregationType];
+
 		var matches = function(condition) {
-			return recordMatchesRule(record, condition);
+			assertSupportedCondition(condition);
+
+			if (isFilter(condition)) {
+				return recordMatchesFilter(record, condition);
+			}
+			return recordMatchesValueCondition(record, condition);
 		};
 
 		if (isEmpty(conditions)) {
@@ -270,11 +262,8 @@ var createFilterMatcher = function() {
 		if (aggregationType === 'or') {
 			return any(conditions, matches);
 		}
+	}
 
-	};
-
-	return filterMatcher;
-
+module.exports = {
+	recordMatchesFilter: recordMatchesFilter,
 };
-
-module.exports = createFilterMatcher;

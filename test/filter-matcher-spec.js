@@ -2,7 +2,7 @@
 
 describe('Filter matcher', function() {
 
-	var matches = require('../src/filter-matcher.js')().recordMatchesFilter;
+	var matches = require('../src/filter-matcher.js').recordMatchesFilter;
 
 	it('should match dotted attributes', function() {
 		var filter = {
