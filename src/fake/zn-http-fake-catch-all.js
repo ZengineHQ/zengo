@@ -242,7 +242,9 @@ var fakeDao = function(datum) {
 
 		var index = findIndex(data, { 'id': parseInt(options.namedParams.resourceId) });
 
-		data.splice(index, 1);
+		if (index !== -1) {
+			data.splice(index, 1);
+		}
 
 		return;
 
@@ -262,7 +264,9 @@ var fakeDao = function(datum) {
 
 		var index = findIndex(data, { 'id': parseInt(options.namedParams.subResourceId) });
 
-		data.splice(index, 1);
+		if (index !== -1) {
+			data.splice(index, 1);
+		}
 
 		return;
 
