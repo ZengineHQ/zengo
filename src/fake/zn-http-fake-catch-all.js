@@ -6,6 +6,8 @@ var findIndex = require('lodash.findindex');
 var merge = require('lodash.merge');
 var orderBy = require('lodash.orderby');
 var query = require('./zn-http-fake-query');
+var isArray = Array.isArray;
+var forEach = require('lodash.foreach');
 
 var fakeDao = function(datum) {
 
@@ -26,6 +28,33 @@ var fakeDao = function(datum) {
 		var lastId = ordered[lastIndex].id;
 
 		return lastId;
+
+	};
+
+	var batchSave = function(datum, dataToSave, lastId) {
+
+		var savedIds = [];
+
+		forEach(dataToSave, function(data) {
+
+			if (data.hasOwnProperty('id')) {
+				var existing = find(datum, { 'id': parseInt(data.id) });
+				data = existing ? merge(existing, data) : data;
+			}
+
+			if (!data.hasOwnProperty('id')) {
+				data.id = ++lastId;
+			}
+
+			savedIds.push(data.id);
+
+			if (!existing) {
+				datum.push(data);
+			}
+
+		});
+
+		return savedIds;
 
 	};
 
@@ -143,17 +172,20 @@ var fakeDao = function(datum) {
 
 	};
 
-	dao.createResource = function(dataToSave, options) {
+	dao.saveResource = function(dataToSave, options) {
 
 		var data = get(datum, options.namedParams.resource);
 
 		if (!data) {
-			dataToSave.id = 1;
-			datum[options.namedParams.resource] = [dataToSave];
-			return dataToSave;
+			datum[options.namedParams.resource] = [];
+			data = datum[options.namedParams.resource];
 		}
 
 		var lastId = getLastId(data);
+
+		if (isArray(dataToSave)) {
+			return batchSave(data, dataToSave, lastId);
+		}
 
 		if (!dataToSave.hasOwnProperty('id')) {
 			dataToSave.id = ++lastId;
@@ -165,7 +197,7 @@ var fakeDao = function(datum) {
 
 	};
 
-	dao.createSubResource = function(dataToSave, options) {
+	dao.saveSubResource = function(dataToSave, options) {
 
 		var data = get(datum, options.namedParams.resource);
 
@@ -185,6 +217,10 @@ var fakeDao = function(datum) {
 		}
 
 		var lastId = getLastId(data);
+
+		if (isArray(dataToSave)) {
+			return batchSave(data, dataToSave, lastId);
+		}
 
 		if (!dataToSave.hasOwnProperty('id')) {
 			dataToSave.id = ++lastId;
@@ -234,6 +270,8 @@ var fakeDao = function(datum) {
 
 	dao.deleteResource = function(options) {
 
+		// todo: support batch delete
+
 		var data = get(datum, options.namedParams.resource);
 
 		if (!data) {
@@ -251,6 +289,8 @@ var fakeDao = function(datum) {
 	};
 
 	dao.deleteSubResource = function(options) {
+
+		// todo: support batch delete
 
 		var data = get(datum, options.namedParams.resource);
 

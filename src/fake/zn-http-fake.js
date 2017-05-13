@@ -111,8 +111,8 @@ var createZnCoreFake = function(data) {
 	router.get('/:resource/:resourceId/:subResource/count', catchAll.countSubResource);
 	router.get('/:resource/:resourceId/:subResource/:subResourceId', catchAll.getSubResource);
 
-	router.post('/:resource', catchAll.createResource);
-	router.post('/:resource/:resourceId/:subResource', catchAll.createSubResource);
+	router.post('/:resource', catchAll.saveResource);
+	router.post('/:resource/:resourceId/:subResource', catchAll.saveSubResource);
 
 	router.put('/:resource/:resourceId', catchAll.updateResource);
 	router.put('/:resource/:resourceId/:subResource/:subResourceId', catchAll.updateSubResource);
