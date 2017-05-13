@@ -37,20 +37,21 @@ var fakeDao = function(datum) {
 
 		forEach(dataToSave, function(data) {
 
+			var existing;
+
 			if (data.hasOwnProperty('id')) {
-				var existing = find(datum, { 'id': parseInt(data.id) });
-				data = existing ? merge(existing, data) : data;
+				existing = find(datum, { 'id': parseInt(data.id) });
 			}
 
-			if (!data.hasOwnProperty('id')) {
-				data.id = ++lastId;
+			if (existing) {
+				data = merge(existing, data);
+				savedIds.push(data.id);
+				return;
 			}
 
+			data.id = ++lastId;
 			savedIds.push(data.id);
-
-			if (!existing) {
-				datum.push(data);
-			}
+			datum.push(data);
 
 		});
 
