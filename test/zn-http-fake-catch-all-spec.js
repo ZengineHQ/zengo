@@ -1357,4 +1357,41 @@ describe('ZnHttpFake (catch all)', function() {
 
 	});
 
+	describe('sorting and paging', function() {
+
+		it('sorts by id asc by default', function() {
+
+			var datum = {
+				workspaces: [
+					{
+						id: 100,
+						name: 'Workspace100'
+					},
+					{
+						id: 1,
+						name: 'Workspace1'
+					},
+					{
+						id: 7,
+						name: 'Workspace7'
+					}
+				]
+			};
+
+			var znHttpFake = zengo.znHttpFake(datum);
+
+			var api = Api(znHttpFake);
+
+			var check = function(results) {
+				expect(results[0]).to.be.eql({id: 1, name: 'Workspace1'});
+				expect(results[1]).to.be.eql({id: 7, name: 'Workspace7'});
+				expect(results[2]).to.be.eql({id: 100, name: 'Workspace100'});
+			};
+
+			return api.get('/workspaces').then(check);
+
+		});
+
+	});
+
 });
