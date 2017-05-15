@@ -3,8 +3,7 @@
 var util = require('./zn-http-fake-query-util');
 var orderBy = require('lodash.orderby');
 var forEach = require('lodash.foreach');
-var filterMatcher = require('../filter-matcher');
-var recordMatchesFilter = filterMatcher().recordMatchesFilter;
+var recordMatchesFilter = require('../filter-matcher').recordMatchesFilter;
 
 var fakeQuery = {};
 

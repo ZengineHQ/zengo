@@ -2,11 +2,12 @@
 
 // from https://github.com/Wizehive/anglerfish/blob/stage/app/js/core/services/zn-filter-matcher.js
 
+var isEmpty = require('lodash.isempty');
+var has = require('lodash.has');
+var get = require('lodash.get');
+var all = require('lodash.every');
+var any = require('lodash.some');
 var BigNumber = require('bignumber.js');
-
-var createFilterMatcher = function() {
-
-	var filterMatcher = {};
 
 	var ruleFunctionMap = {
 		'': 'ruleEquals',
@@ -34,7 +35,6 @@ var createFilterMatcher = function() {
 
 	}
 
-	// Matchers for each rule "prefix" type
 	var matchers = {
 		ruleEquals: function(recordValue, ruleValue) {
 
@@ -166,121 +166,104 @@ var createFilterMatcher = function() {
 		}
 	};
 
-	/**
-	 * Determine whether the given record matches the given filter rule
-	 */
-	function recordMatchesRule(record, rule) {
+	function getConditionValues(condition) {
 
-		var operators = ["and", "or"];
-
-		if (operators.indexOf(Object.keys(rule)[0]) !== -1) {
-			// Rule contains "and"/"or" key - nested filter
-			return filterMatcher.recordMatchesFilter(record, rule);
+		if (typeof condition.value === 'string' && condition.value.indexOf('|') !== -1) {
+			return condition.value.split('|');
 		}
 
-		if (rule.filter !== undefined) {
-			throw new Error("Subfilter matching is not supported");
-		}
-
-		if (typeof rule.value === 'string' && rule.value.split('|').indexOf('logged-in-user') !== -1) {
-			throw new Error ("Dynamic filter conditions are not supported");
-		}
-
-		// From here, we know we have a normal rule with "prefix", "attribute", and "value" properties.
-		var recordValue = getRecordValue(record, rule);
-		var ruleValues = getRuleValues(rule);
-
-		// Run actual match logic based on rule prefix
-		var matchFunction = ruleFunctionMap[rule.prefix];
-		for (var i in ruleValues) {
-			if (matchers[matchFunction](recordValue, ruleValues[i])) {
-				return true;
-			}
-		}
-
-		// All ruleValues failed to match
-		return false;
-
-	}
-
-	/**
-	 * Helper - parse rule values from filter rule
-	 * If rule contains piped values, splits them into an array; otherwise
-	 * yields an array-wrapped version of the single rule value for consistency
-	 */
-	function getRuleValues(rule) {
-
-		if (typeof rule.value === 'string' && rule.value.indexOf('|') !== -1) {
-			return rule.value.split('|');
-		}
-
-		if (rule.value === 'null' || rule.value === null) {
+		if (condition.value === 'null' || condition.value === null) {
 			return [''];
 		}
 
-		return [rule.value];
+		return [condition.value];
 
 	}
 
-	/**
-	 * Helper - get the needed record value for comparison against this rule
-	 */
-	function getRecordValue(record, rule) {
+	function getRecordObjValue(value) {
+		if (value.value !== undefined) {
+			// file-upload
+			return value.value;
+		}
+		if (value.id !== undefined) {
+			// linked and member
+			return value.id;
+		}
+	}
 
-		var attributePieces = rule.attribute.split(".");
-
-		// Parse current record value of this rule's attribute, including dotted names (e.g. "folder.id")
-		var recordValue = record;
-
-		attributePieces.forEach(function(attributePiece) {
-			recordValue = recordValue && recordValue[attributePiece];
-		});
-
-		// Parse subobject properties to use for check - e.g. field123.value for upload, field456.id for linked/member
-		if (recordValue instanceof Object) {
-			if (recordValue.value !== undefined) {
-				recordValue = recordValue.value;
-			} else if (recordValue.id !== undefined) {
-				recordValue = recordValue.id;
-			}
-		} else if (recordValue === null || recordValue === undefined) {
+	function getRecordValue(record, condition) {
+		var recordValue = get(record, condition.attribute);
+		if (recordValue === null || recordValue === undefined) {
 			return '';
 		}
-
+		if (recordValue instanceof Object) {
+			return getRecordObjValue(recordValue);
+		}
 		return recordValue;
-
 	}
 
-	/**
-	 * Determine whether the given record matches the given filter
-	 */
-	filterMatcher.recordMatchesFilter = function(record, filter) {
+	function isFilter(condition) {
+		return has(condition, 'and') || has(condition, 'or');
+	}
 
-		var currentOperator = Object.keys(filter)[0];
+	function isSubfilter(condition) {
+		return condition.filter !== undefined;
+	}
 
-		if (filter[currentOperator].length === 0) {
-			// Empty filter / no rules - considered a "match all"
+	function isDynamicCondition(condition) {
+		return typeof condition.value === 'string' &&
+			condition.value.split('|').indexOf('logged-in-user') !== -1;
+	}
+
+	function assertSupportedCondition(condition) {
+		if (isSubfilter(condition)) {
+			throw new Error("Subfilter matching is not supported");
+		}
+		if (isDynamicCondition(condition)) {
+			throw new Error("Dynamic filter conditions are not supported");
+		}
+	}
+
+	function recordMatchesValueCondition(record, condition) {
+		var actualValue = getRecordValue(record, condition);
+		var expectedValues = getConditionValues(condition);
+
+		var matchesCondition = matchers[
+			ruleFunctionMap[condition.prefix]
+		];
+		var matchesAsExpected = function(expectedValue) {
+			return matchesCondition(actualValue, expectedValue);
+		};
+		return any(expectedValues, matchesAsExpected);
+	}
+
+	function recordMatchesFilter(record, filter) {
+
+		var aggregationType = Object.keys(filter)[0];
+		var conditions = filter[aggregationType];
+
+		if (isEmpty(conditions)) {
 			return true;
 		}
 
-		for (var i in filter[currentOperator]) {
-			var match = recordMatchesRule(record, filter[currentOperator][i]);
-			if (currentOperator === 'or' && match) {
-				return true;
+		var matches = function(condition) {
+			assertSupportedCondition(condition);
+
+			if (isFilter(condition)) {
+				return recordMatchesFilter(record, condition);
 			}
-			if (currentOperator === 'and' && !match) {
-				return false;
-			}
+			return recordMatchesValueCondition(record, condition);
+		};
+
+		if (aggregationType === 'and') {
+			return all(conditions, matches);
 		}
 
-		// "and" - no misses by this point, return true
-		// "or" - no matches by this point, return false
-		return currentOperator === 'and';
+		if (aggregationType === 'or') {
+			return any(conditions, matches);
+		}
+	}
 
-	};
-
-	return filterMatcher;
-
+module.exports = {
+	recordMatchesFilter: recordMatchesFilter,
 };
-
-module.exports = createFilterMatcher;
