@@ -5,8 +5,6 @@ var RoutePattern = require('route-pattern');
 var find = require('lodash.find');
 var merge = require('lodash.merge');
 
-var httpFakeForm = require('./zn-http-fake-form.js');
-var httpFakeRecord = require('./zn-http-fake-record.js');
 var httpFakeCatchAll = require('./zn-http-fake-catch-all');
 
 var createGenericRouter = function() {
@@ -71,37 +69,6 @@ var createZnCoreFake = function(data) {
 
 	var catchAll = httpFakeCatchAll(data);
 	var router = createGenericRouter();
-	var fakeFormRepo = httpFakeForm();
-	var fakeRecordRepo = httpFakeRecord();
-
-	router.get('/forms', function(options) {
-		return fakeFormRepo.query(options);
-	});
-
-	router.post('/forms', function(data, options) {
-		return fakeFormRepo.save(data, options);
-	});
-
-	router.get('/forms/:formId', function(options) {
-		var formId = parseInt(options.namedParams.formId);
-		return fakeFormRepo.get(formId);
-	});
-
-	router.get('/forms/:formId/records', function(options) {
-		var formId = parseInt(options.namedParams.formId);
-		return fakeRecordRepo.forForm(formId).query();
-	});
-
-	router.post('/forms/:formId/records', function(data, options) {
-		var formId = parseInt(options.namedParams.formId);
-		return fakeRecordRepo.forForm(formId).save(data, options);
-	});
-
-	router.put('/forms/:formId/records/:recordId', function(data, options) {
-		var formId = parseInt(options.namedParams.formId);
-		data.id = parseInt(options.namedParams.recordId);
-		return fakeRecordRepo.forForm(formId).save(data, options);
-	});
 
 	router.get('/:resource', catchAll.queryResource);
 	router.get('/:resource/count', catchAll.countResource);

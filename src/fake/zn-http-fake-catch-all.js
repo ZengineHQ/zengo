@@ -9,6 +9,7 @@ var query = require('./zn-http-fake-query');
 var isArray = Array.isArray;
 var forEach = require('lodash.foreach');
 
+
 var fakeDao = function(datum) {
 
 	var dao = {};
