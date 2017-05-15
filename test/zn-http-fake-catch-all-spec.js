@@ -582,6 +582,227 @@ describe('ZnHttpFake (catch all)', function() {
 
 	});
 
+	describe('batch save', function() {
+
+		it('should save data for new resource', function() {
+
+			var datum = {};
+
+			var data = [
+				{ name: 'Workspace1' },
+				{ name: 'Workspace2' }
+			];
+
+			var znHttpFake = zengo.znHttpFake(datum);
+
+			var api = Api(znHttpFake);
+
+			var save = function() {
+				return api.post('/workspaces', data);
+			};
+
+			var checkResponse = function(results) {
+				expect(results).to.be.eql([1, 2]);
+			};
+
+			var getData = function() {
+				return api.get('/workspaces');
+			};
+
+			var checkData = function(results) {
+				expect(results).to.be.eql([{id:1, name:'Workspace1'}, {id:2, name:'Workspace2'}]);
+			};
+
+			return save().then(checkResponse).then(getData).then(checkData);
+
+		});
+
+		it('should save data for existing resource', function() {
+
+			var datum = {
+				workspaces: [
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2' },
+					{ id: 4, name: 'Workspace4' }
+				]
+			};
+
+			var data = [
+				{ name: 'Workspace5' },
+				{ name: 'Workspace6' }
+			];
+
+			var znHttpFake = zengo.znHttpFake(datum);
+
+			var api = Api(znHttpFake);
+
+			var save = function() {
+				return api.post('/workspaces', data);
+			};
+
+			var checkResponse = function(results) {
+				expect(results).to.be.eql([5,6]);
+			};
+
+			var getData = function() {
+				return api.get('/workspaces');
+			};
+
+			var checkData = function(results) {
+				var expected = [
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2' },
+					{ id: 4, name: 'Workspace4' },
+					{ id: 5, name: 'Workspace5' },
+					{ id: 6, name: 'Workspace6' }
+				];
+				expect(results).to.be.eql(expected);
+			};
+
+			return save().then(checkResponse).then(getData).then(checkData);
+
+		});
+
+		it('should save data for new sub resource', function() {
+
+			var datum = {
+				workspaces: [
+					{
+						id: 101,
+						name: 'Workspace1'
+					}
+				]
+			};
+
+			var data = [
+				{ name: 'Role1' },
+				{ name: 'Role2' }
+			];
+
+			var znHttpFake = zengo.znHttpFake(datum);
+
+			var api = Api(znHttpFake);
+
+			var save = function() {
+				return api.post('/workspaces/101/roles', data);
+			};
+
+			var checkResponse = function(results) {
+				expect(results).to.be.eql([1,2]);
+			};
+
+			var getData = function() {
+				return api.get('/workspaces/101/roles');
+			};
+
+			var checkData = function(results) {
+				expect(results).to.be.eql([{id:1, name:'Role1'}, {id:2, name:'Role2'}]);
+			};
+
+			return save().then(checkResponse).then(getData).then(checkData);
+
+		});
+
+		it('should save data for existing sub resource', function() {
+
+			var datum = {
+				workspaces: [
+					{
+						id: 101,
+						name: 'Workspace1',
+						roles: [
+							{
+								id: 201,
+								name: 'Role1'
+							}
+						]
+					}
+				]
+			};
+
+			var data = [
+				{ name: 'Role2' },
+				{ name: 'Role3' }
+			];
+
+			var znHttpFake = zengo.znHttpFake(datum);
+
+			var api = Api(znHttpFake);
+
+			var save = function() {
+				return api.post('/workspaces/101/roles', data);
+			};
+
+			var checkResponse = function(results) {
+				expect(results).to.be.eql([202,203]);
+			};
+
+			var getData = function() {
+				return api.get('/workspaces/101/roles');
+			};
+
+			var checkData = function(results) {
+				var expected = [
+					{ id: 201, name: 'Role1' },
+					{ id: 202, name: 'Role2' },
+					{ id: 203, name: 'Role3' }
+				];
+				expect(results).to.be.eql(expected);
+			};
+
+			return save().then(checkResponse).then(getData).then(checkData);
+
+		});
+
+		it('should update existing and save new', function() {
+
+			var datum = {
+				workspaces: [
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2' },
+					{ id: 4, name: 'Workspace4' }
+				]
+			};
+
+			var data = [
+				{ id: 2, name: 'Workspace2 updated'},
+				{ id: 4, name: 'Workspace4 updated'},
+				{ name: 'Workspace5' },
+				{ name: 'Workspace6' }
+			];
+
+			var znHttpFake = zengo.znHttpFake(datum);
+
+			var api = Api(znHttpFake);
+
+			var save = function() {
+				return api.post('/workspaces', data);
+			};
+
+			var checkResponse = function(results) {
+				expect(results).to.be.eql([2,4,5,6]);
+			};
+
+			var getData = function() {
+				return api.get('/workspaces');
+			};
+
+			var checkData = function(results) {
+				var expected = [
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2 updated' },
+					{ id: 4, name: 'Workspace4 updated' },
+					{ id: 5, name: 'Workspace5' },
+					{ id: 6, name: 'Workspace6' }
+				];
+				expect(results).to.be.eql(expected);
+			};
+
+			return save().then(checkResponse).then(getData).then(checkData);
+
+		});
+	});
+
 	describe('filtering with `filter` query param', function() {
 
 		it('should return results for prefix `` (equal)', function() {

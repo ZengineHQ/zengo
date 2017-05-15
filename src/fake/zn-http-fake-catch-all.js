@@ -1,15 +1,13 @@
 'use strict';
 
-var Promise = require('bluebird');
-var RoutePattern = require('route-pattern');
 var get = require('lodash.get');
-var isObject = require('lodash.isobject');
-var forEach = require('lodash.foreach');
 var find = require('lodash.find');
 var findIndex = require('lodash.findindex');
 var merge = require('lodash.merge');
 var orderBy = require('lodash.orderby');
 var query = require('./zn-http-fake-query');
+var isArray = Array.isArray;
+var forEach = require('lodash.foreach');
 
 var fakeDao = function(datum) {
 
@@ -17,64 +15,10 @@ var fakeDao = function(datum) {
 
 	datum = datum || {};
 
-	var getNamedParams = function(endpoint) {
+	var getLastId = function(data) {
 
-		var patterns = [
-			'/:resource',
-			'/:resource/:resourceId',
-			'/:resource/:resourceId/:subResource',
-			'/:resource/:resourceId/:subResource/:subResourceId'
-		];
-
-		var namedParams;
-
-		forEach(patterns, function(pattern) {
-			pattern = RoutePattern.fromString(pattern);
-			namedParams = pattern.match(endpoint) ? pattern.match(endpoint).namedParams : namedParams;
-		});
-
-		return namedParams;
-
-	};
-
-	var getPath = function(endpoint) {
-
-		var data;
-
-		var namedParams = getNamedParams(endpoint);
-
-		if (!namedParams) {
-			return data;
-		}
-
-		data = get(datum, namedParams.resource);
-
-		if (!namedParams.resourceId || namedParams.resourceId === 'count') {
-			return data;
-		}
-
-		data = find(data, { 'id': parseInt(namedParams.resourceId) });
-
-		if (!namedParams.subResource) {
-			return data;
-		}
-
-		data = get(data, namedParams.subResource);
-
-		if (!namedParams.subResourceId || namedParams.subResourceId === 'count') {
-			return data;
-		}
-
-		data = find(data, { 'id': parseInt(namedParams.subResourceId) });
-
-		return data;
-
-	};
-
-	var getLastIdAndIndex = function(data) {
-
-		if (!data) {
-			return { id: 0 };
+		if (!data || !data.length) {
+			return 0;
 		}
 
 		var ordered = orderBy(data, 'id');
@@ -83,44 +27,45 @@ var fakeDao = function(datum) {
 
 		var lastId = ordered[lastIndex].id;
 
-		return { id: lastId, index: lastIndex };
+		return lastId;
 
 	};
 
-	dao.get = function(endpoint, options) {
+	var batchSave = function(datum, dataToSave, lastId) {
 
-		var data = getPath(endpoint);
+		var savedIds = [];
 
-		var params = get(options, 'params');
+		forEach(dataToSave, function(data) {
 
-		if (endpoint && endpoint.endsWith('/count')) {
+			var existing;
 
-			data = query.filter(data, params);
-			data = query.count(data);
+			if (data.hasOwnProperty('id')) {
+				existing = find(datum, { 'id': parseInt(data.id) });
+			}
 
-			return {
-				status: 200,
-				code: 2000,
-				totalCount: data
-			};
+			if (existing) {
+				data = merge(existing, data);
+				savedIds.push(data.id);
+				return;
+			}
 
-		}
+			data.id = ++lastId;
+			savedIds.push(data.id);
+			datum.push(data);
 
-		else if (isObject(data) && !Array.isArray(data)) {
+		});
 
-			data = query.project(data, params);
-			data = data || {};
+		return savedIds;
 
-		}
+	};
 
-		else if (Array.isArray(data)) {
+	dao.queryResource = function(options) {
 
-			data = query.filter(data, params);
-			data = query.sortAndPaginate(data, params);
-			data = query.project(data, params);
-			data = data || [];
+		var data = get(datum, options.namedParams.resource);
 
-		}
+		data = query.filter(data, options.params);
+		data = query.sortAndPaginate(data, options.params);
+		data = query.project(data, options.params);
 
 		return {
 			status: 200,
@@ -128,55 +73,123 @@ var fakeDao = function(datum) {
 			limit: 20,
 			offset: 0,
 			totalCount: query.count(data),
-			data: data
+			data: data || []
 		};
 
 	};
 
-	dao.post = function(endpoint, dataToSave, options) {
+	dao.querySubResource = function(options) {
 
-		// todo: support batch saves (create/updates)
+		var data = get(datum, options.namedParams.resource);
 
-		if (!dataToSave) {
-			return;
+		data = find(data, { 'id': parseInt(options.namedParams.resourceId) });
+
+		data = get(data, options.namedParams.subResource);
+
+		data = query.filter(data, options.params);
+		data = query.sortAndPaginate(data, options.params);
+		data = query.project(data, options.params);
+
+		return {
+			status: 200,
+			code: 2000,
+			limit: 20,
+			offset: 0,
+			totalCount: query.count(data),
+			data: data || []
+		};
+
+	};
+
+	dao.getResource = function(options) {
+
+		var data = get(datum, options.namedParams.resource);
+
+		data = find(data, { 'id': parseInt(options.namedParams.resourceId) });
+
+		data = query.project(data, options.params);
+
+		return {
+			status: 200,
+			code: 2000,
+			limit: 20,
+			offset: 0,
+			totalCount: query.count(data),
+			data: data || {}
+		};
+
+	};
+
+	dao.getSubResource = function(options) {
+
+		var data = get(datum, options.namedParams.resource);
+
+		data = find(data, { 'id': parseInt(options.namedParams.resourceId) });
+
+		data = get(data, options.namedParams.subResource);
+
+		data = find(data, { 'id': parseInt(options.namedParams.subResourceId) });
+
+		return {
+			status: 200,
+			code: 2000,
+			limit: 20,
+			offset: 0,
+			totalCount: query.count(data),
+			data: data || {}
+		};
+
+	};
+
+	dao.countResource = function(options) {
+
+		var data = get(datum, options.namedParams.resource);
+
+		data = query.filter(data, options.params);
+
+		return {
+			status: 200,
+			code: 2000,
+			totalCount: query.count(data)
+		};
+
+	};
+
+	dao.countSubResource = function(options) {
+
+		var data = get(datum, options.namedParams.resource);
+
+		data = find(data, { 'id': parseInt(options.namedParams.resourceId) });
+
+		data = get(data, options.namedParams.subResource);
+
+		data = query.filter(data, options.params);
+
+		return {
+			status: 200,
+			code: 2000,
+			totalCount: query.count(data)
+		};
+
+	};
+
+	dao.saveResource = function(dataToSave, options) {
+
+		var data = get(datum, options.namedParams.resource);
+
+		if (!data) {
+			datum[options.namedParams.resource] = [];
+			data = datum[options.namedParams.resource];
 		}
 
-		var namedParams = getNamedParams(endpoint);
+		var lastId = getLastId(data);
 
-		if (!namedParams) {
-			return;
+		if (isArray(dataToSave)) {
+			return batchSave(data, dataToSave, lastId);
 		}
-
-		// /resource/resourceId
-		if (namedParams.resourceId && !namedParams.subResource) {
-			return;
-		}
-
-		// /resource/resourceId/subResource/subResourceId
-		if (namedParams.subResource && namedParams.subResourceId) {
-			return;
-		}
-
-		var data = getPath(endpoint);
-
-		// /resource (new)
-		if (!data && !namedParams.resourceId) {
-			dataToSave.id = 1;
-			datum[namedParams.resource] = [dataToSave];
-			return dataToSave;
-		}
-
-		var last = getLastIdAndIndex(data);
 
 		if (!dataToSave.hasOwnProperty('id')) {
-			dataToSave.id = ++last.id;
-		}
-
-		// /resource/resourceId/subResource (new)
-		if (!data && namedParams.subResource) {
-			data = getPath(['/', namedParams.resource, namedParams.resourceId].join('/'));
-			data[namedParams.subResource] = [];
-			data = data[namedParams.subResource];
+			dataToSave.id = ++lastId;
 		}
 
 		data.push(dataToSave);
@@ -185,111 +198,118 @@ var fakeDao = function(datum) {
 
 	};
 
-	dao.put = function(endpoint, dataToSave, options) {
+	dao.saveSubResource = function(dataToSave, options) {
 
-		if (!dataToSave) {
-			return;
-		}
+		var data = get(datum, options.namedParams.resource);
 
-		var namedParams = getNamedParams(endpoint);
-
-		if (!namedParams) {
-			return;
-		}
-
-		var data = getPath(endpoint);
-
-		// /resource/resourceId
-		if (data && namedParams.resourceId && !namedParams.subResource) {
-			data = merge(data, dataToSave);
-		}
-
-		// /resource/resourceId/subResource/subResourceId
-		if (data && namedParams.subResourceId) {
-			data = merge(data, dataToSave);
-		}
-
-		return data;
-
-	};
-
-	dao.del = function(endpoint, options) {
-
-		// todo: support batch delete
-
-		var namedParams = getNamedParams(endpoint);
-
-		if (!namedParams) {
-			return;
-		}
-
-		// /resource
-		if (!namedParams.resourceId) {
-			return;
-		}
-
-		// /resource/resourceId/subResource
-		if (namedParams.subResource && !namedParams.subResourceId) {
-			return;
-		}
-
-		var path = namedParams.subResourceId ?
-			['/', namedParams.resource, namedParams.resourceId, namedParams.subResource] :
-			['/', namedParams.resource];
-
-		var data = getPath(path.join('/'));
+		data = find(data, { 'id': parseInt(options.namedParams.resourceId) });
 
 		if (!data) {
 			return;
 		}
 
-		var id = namedParams.subResourceId || namedParams.resourceId;
+		data = get(data, options.namedParams.subResource);
 
-		var index = findIndex(data, { 'id': parseInt(id) });
+		if (!data) {
+			data = get(datum, options.namedParams.resource);
+			data = find(data, { 'id': parseInt(options.namedParams.resourceId) });
+			data[options.namedParams.subResource] = [];
+			data = data[options.namedParams.subResource];
+		}
 
-		data.splice(index, 1);
+		var lastId = getLastId(data);
+
+		if (isArray(dataToSave)) {
+			return batchSave(data, dataToSave, lastId);
+		}
+
+		if (!dataToSave.hasOwnProperty('id')) {
+			dataToSave.id = ++lastId;
+		}
+
+		data.push(dataToSave);
+
+		return dataToSave;
+
+	};
+
+	dao.updateResource = function(dataToSave, options) {
+
+		var data = get(datum, options.namedParams.resource);
+
+		data = find(data, { 'id': parseInt(options.namedParams.resourceId) });
+
+		if (!data) {
+			return;
+		}
+
+		data = merge(data, dataToSave);
+
+		return data;
+
+	};
+
+	dao.updateSubResource = function(dataToSave, options) {
+
+		var data = get(datum, options.namedParams.resource);
+
+		data = find(data, { 'id': parseInt(options.namedParams.resourceId) });
+
+		data = get(data, options.namedParams.subResource);
+
+		data = find(data, { 'id': parseInt(options.namedParams.subResourceId) });
+
+		if (!data) {
+			return;
+		}
+
+		data = merge(data, dataToSave);
+
+		return data;
+
+	};
+
+	dao.deleteResource = function(options) {
+
+		// todo: support batch delete
+
+		var data = get(datum, options.namedParams.resource);
+
+		if (!data) {
+			return;
+		}
+
+		var index = findIndex(data, { 'id': parseInt(options.namedParams.resourceId) });
+
+		if (index !== -1) {
+			data.splice(index, 1);
+		}
 
 		return;
 
 	};
 
-	dao.catchAll = function(method, endpoint, optionsOrData, options) {
+	dao.deleteSubResource = function(options) {
 
-		// won't work for everything
-		// the general idea is to support common api operations for the following
-		// resources
-		//
-		// /:resource
-		// /:resource/count
-		// /:resource/:resourceId
-		// /:resource/:resourceId/:subResource
-		// /:resource/:resourceId/:subResource/count
-		// /:resource/:resourceId/:subResource/:subResourceId
-		//
-		// a list of all public available resources can be found in here:
-		// https://github.com/Wizehive/sandy/blob/master/app/Console/Command/ApiDocsShell.php#L172
-		//
-		// for special resources it can be implemented using custom dao's
+		// todo: support batch delete
 
-		switch (method) {
+		var data = get(datum, options.namedParams.resource);
 
-			case 'GET':
-				return dao.get(endpoint, optionsOrData);
+		data = find(data, { 'id': parseInt(options.namedParams.resourceId) });
 
-			case 'POST':
-				return dao.post(endpoint, optionsOrData, options);
+		data = get(data, options.namedParams.subResource);
 
-			case 'PUT':
-				return dao.put(endpoint, optionsOrData, options);
-
-			case 'DEL':
-			case 'DELETE':
-				return dao.del(endpoint, optionsOrData);
-
-			default:
-				return Promise.reject(new Error('ZnHttpFake(catchAll): unimplemented method: ' + method));
-
+		if (!data) {
+			return;
 		}
+
+		var index = findIndex(data, { 'id': parseInt(options.namedParams.subResourceId) });
+
+		if (index !== -1) {
+			data.splice(index, 1);
+		}
+
+		return;
 
 	};
 

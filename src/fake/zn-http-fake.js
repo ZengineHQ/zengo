@@ -9,7 +9,7 @@ var httpFakeForm = require('./zn-http-fake-form.js');
 var httpFakeRecord = require('./zn-http-fake-record.js');
 var httpFakeCatchAll = require('./zn-http-fake-catch-all');
 
-var createGenericRouter = function(catchAll) {
+var createGenericRouter = function() {
 
 	var actions = {
 		'GET': [],
@@ -47,14 +47,13 @@ var createGenericRouter = function(catchAll) {
 			return RoutePattern.fromString(route.pattern).matches(endpoint);
 		});
 		if (!route) {
-			// throw Error('ZnHttpFake: unimplemented route: ' + method + ': ' + endpoint);
-			return catchAll(method, endpoint, optionsOrData, options);
+			throw Error('ZnHttpFake: unimplemented route: ' + method + ': ' + endpoint);
 		}
 		var match = RoutePattern.fromString(route.pattern).match(endpoint);
-		if (options) {
-			options = merge(options, match.namedParams);
+		if (method === 'POST' || method === 'PUT') {
+			options = merge(options, { namedParams: match.namedParams });
 		} else {
-			optionsOrData = merge(optionsOrData, match.namedParams);
+			optionsOrData = merge(optionsOrData, { namedParams: match.namedParams });
 		}
 		return route.callback(optionsOrData, options);
 	};
@@ -70,44 +69,56 @@ var createGenericRouter = function(catchAll) {
 
 var createZnCoreFake = function(data) {
 
-	var catchAll = httpFakeCatchAll(data).catchAll;
-	var router = createGenericRouter(catchAll);
+	var catchAll = httpFakeCatchAll(data);
+	var router = createGenericRouter();
 	var fakeFormRepo = httpFakeForm();
 	var fakeRecordRepo = httpFakeRecord();
 
-	router.get('/forms', function(params) {
-		return fakeFormRepo.query(params);
+	router.get('/forms', function(options) {
+		return fakeFormRepo.query(options);
 	});
 
-	router.post('/forms', function(data) {
-		return fakeFormRepo.save(data);
+	router.post('/forms', function(data, options) {
+		return fakeFormRepo.save(data, options);
 	});
 
-	router.get('/forms/:formId', function(data) {
-		var formId = parseInt(data.formId);
-		delete data.formId;
+	router.get('/forms/:formId', function(options) {
+		var formId = parseInt(options.namedParams.formId);
 		return fakeFormRepo.get(formId);
 	});
 
-	router.get('/forms/:formId/records', function(data) {
-		var formId = parseInt(data.formId);
-		delete data.formId;
+	router.get('/forms/:formId/records', function(options) {
+		var formId = parseInt(options.namedParams.formId);
 		return fakeRecordRepo.forForm(formId).query();
 	});
 
-	router.post('/forms/:formId/records', function(data) {
-		var formId = parseInt(data.formId);
-		delete data.formId;
-		return fakeRecordRepo.forForm(formId).save(data);
+	router.post('/forms/:formId/records', function(data, options) {
+		var formId = parseInt(options.namedParams.formId);
+		return fakeRecordRepo.forForm(formId).save(data, options);
 	});
 
-	router.put('/forms/:formId/records/:recordId', function(data) {
-		var formId = parseInt(data.formId);
-		delete data.formId;
-		data.id = parseInt(data.recordId);
-		delete data.recordId;
-		return fakeRecordRepo.forForm(formId).save(data);
+	router.put('/forms/:formId/records/:recordId', function(data, options) {
+		var formId = parseInt(options.namedParams.formId);
+		data.id = parseInt(options.namedParams.recordId);
+		return fakeRecordRepo.forForm(formId).save(data, options);
 	});
+
+	router.get('/:resource', catchAll.queryResource);
+	router.get('/:resource/count', catchAll.countResource);
+	router.get('/:resource/:resourceId', catchAll.getResource);
+
+	router.get('/:resource/:resourceId/:subResource', catchAll.querySubResource);
+	router.get('/:resource/:resourceId/:subResource/count', catchAll.countSubResource);
+	router.get('/:resource/:resourceId/:subResource/:subResourceId', catchAll.getSubResource);
+
+	router.post('/:resource', catchAll.saveResource);
+	router.post('/:resource/:resourceId/:subResource', catchAll.saveSubResource);
+
+	router.put('/:resource/:resourceId', catchAll.updateResource);
+	router.put('/:resource/:resourceId/:subResource/:subResourceId', catchAll.updateSubResource);
+
+	router.del('/:resource/:resourceId', catchAll.deleteResource);
+	router.del('/:resource/:resourceId/:subResource/:subResourceId', catchAll.deleteSubResource);
 
 	return {
 		dispatch: router.dispatch,
