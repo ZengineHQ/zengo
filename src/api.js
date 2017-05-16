@@ -1,49 +1,10 @@
 'use strict';
 
-var reduce = require('lodash.reduce');
-var isObject = require('lodash.isobject');
-var forEach = require('lodash.foreach');
+var assembleParams = require('./api-params-assemble.js');
 
 var createApi = function(znHttp) {
 
 	var api = {};
-
-	var assembleParams = function(params) {
-
-		return reduce(params, function(assembled, paramValue, paramKey) {
-
-			var separator = '|';
-
-			if (paramKey === 'related' || paramKey === 'attributes') {
-				separator = ',';
-			}
-
-			if (paramKey === 'filter' && isObject(paramValue)) {
-				paramValue = JSON.stringify(paramValue);
-				assembled[paramKey] = paramValue;
-				return assembled;
-			}
-
-			if (Array.isArray(paramValue)) {
-				paramValue = paramValue.join(separator);
-				assembled[paramKey] = paramValue;
-				return assembled;
-			}
-
-			if (isObject(paramValue)) {
-				forEach(paramValue, function(value, key) {
-					assembled[paramKey + '.' + key] = value;
-				});
-				return assembled;
-			}
-
-			assembled[paramKey] = paramValue;
-
-			return assembled;
-
-		}, {});
-
-	};
 
 	api.get = function(endpoint, params) {
 		var returnData = function(body) {
