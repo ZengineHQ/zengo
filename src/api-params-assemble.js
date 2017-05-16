@@ -64,7 +64,7 @@ var assembleParam = function(assembled, paramValue, paramKey) {
 	});
 
 	if (assembler) {
-		assembled[paramKey] = assembler.assemble(paramValue, paramKey);
+		assembled[paramKey] = assembler.assemble(paramValue);
 		return assembled;
 	}
 
