@@ -1,115 +1,127 @@
-# Router
 
-Routing for Zengine backend services (unofficial and experimental).
+Routing for backend services.
 
-# Use
+!> For now the `router` only supports single path, `/test/nested` won't work
+if you also have `/test` setup for the sample HTTP method
 
-You could create a file where you register your routes, e.g. `my-service-router.js`
+## dispatch
 
-```js
-var Router = require('zengo').router;
+Arguments
 
-// Register routes
+Name          | Type      | Required  | Description
+--------------|-----------|-----------|----------------------
+eventData     | Object    | &check;   | An instance of `eventData`
 
-Router.get('/', function(request, response) {
-  // ...
-});
+Example
 
-Router.get('/apples', function(request, response) {
-  // ...
-});
-
-Router.post('/apples', function(request, response) {
-  // ...
-});
-
-// This will be used by plugin.js
-module.exports = Router.dispatch;
-```
-
-Every action is injected with `request` and `response`. Those are basically `eventData.request` and `eventData.response`.
-
-Every action should return a promise. When the promise is resolved, Router will make your service respond. The response status and data is based on whether the promise was fulfilled or rejected.
-
-
-To bind the router to your service, add this to your `plugin.js`
+*/backend/my-plugin/plugin.js*
 
 ```js
-var dispatch = require('./src/my-service-router.js');
+'use strict';
+
+var dispatch = require('./src/my-plugin-router.js');
 
 exports.run = function(eventData) {
-  dispatch(eventData);
+	dispatch(eventData);
 };
 ```
 
-## GET Requests
+*/backend/my-plugin/src/my-plugin-router.js*
 
 ```js
+var router = require('zengo').router;
 
-// GET: /workspaces/123/pluginNamespace/serviceName
+router.get('/test', function(request, response) {
+    return Promise.resolve({message: 'Got GET request...'});
+});
 
-Router.get('/', function(request, response) {
+router.post('/test', function(request, response) {
+    return Promise.resolve({message: 'Got POST request...'});
+});
 
-  var workspaceId = request.params.workspaceId;
+module.exports = router.dispatch;
+```
 
-  // getSomething should return a promise
-  // If promise is fulfilled,
-  // service will respond with status 200 and promise response as json response
-  // If promise is rejected,
-  // service will respond with status 500 (unless you specify otherwise – see below)
-  return getSomething(workspaceId);
+## get
 
+Arguments
+
+Name          | Type      | Required  | Description
+--------------|-----------|-----------|----------------------
+path          | String    | &check;   | Url path for routing
+callback      | Function  | &check;   | A callback
+
+!> **Important** the callback needs to return an `Promise` instance
+
+Example
+
+```js
+var router = require('zengo').router;
+
+router.get('/test', function(request, response) {
+    return Promise.resolve({message: 'Got GET request...'});
 });
 ```
 
-## POST Requests
+## post
+
+Arguments
+
+Name          | Type      | Required  | Description
+--------------|-----------|-----------|----------------------
+path          | String    | &check;   | Url path for routing
+callback      | Function  | &check;   | A callback
+
+!> **Important** the callback needs to return an `Promise` instance
+
+Example
 
 ```js
-// POST: /workspaces/123/pluginNamespace/serviceName/webhooks
+var router = require('zengo').router;
 
-Router.post('/webhooks', function(request, response) {
-
-	var body = request.body;
-	var data = body.data[0];
-
-	var activityId = data.id;
-	var workspaceId = data.workspace.id;
-	var webhookSecret = request.headers['x-zengine-webhook-key'];
-
-	var info = {
-		activityId: activityId,
-		workspaceId: workspaceId,
-		webhookSecret: webhookSecret
-	};
-
-	return processWebhook(info);
+router.post('/test', function(request, response) {
+    return Promise.resolve({message: 'Got POST request...'});
 });
-
 ```
 
-## Error handling
+## put
 
-For both `get` and `post` registration, you can catch errors before they are handled by Router.
+Arguments
+
+Name          | Type      | Required  | Description
+--------------|-----------|-----------|----------------------
+path          | String    | &check;   | Url path for routing
+callback      | Function  | &check;   | A callback
+
+!> **Important** the callback needs to return an `Promise` instance
+
+Example
 
 ```js
-Router.get('/apples', function(request, response) {
+var router = require('zengo').router;
 
-  var onError = function(err) {
-  
-    // You can catch specific errors and return a different status code and response
-    if (err.message === 'SomeKnownError') {
-      response.status(400).send({
-        message: 'Bad Request'
-      });
-      // don't forget to return
-      return;
-    }
-    
-    // Unknown error: Re-throw, so Router handles that for you
-    throw err;
-  };
+router.put('/test', function(request, response) {
+    return Promise.resolve({message: 'Got PUT request...'});
+});
+```
 
-  return getApples().catch(onError);
+## delete
 
+Arguments
+
+Name          | Type      | Required  | Description
+--------------|-----------|-----------|----------------------
+path          | String    | &check;   | Url path for routing
+callback      | Function  | &check;   | A callback
+
+!> **Important** the callback needs to return an `Promise` instance
+
+Example
+
+```js
+var router = require('zengo').router;
+
+router.delete('/test', function(request, response) {
+    return Promise.resolve({message: 'Got DELETE request...'});
 });
 ```
