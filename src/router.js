@@ -78,7 +78,7 @@ var dispatch = function(eventData) {
 
 		err = err || {};
 
-		var status = err.status || 500;
+		var status = err.status || err.code || 500;
 
 		var defaultPayload = {
 			name: 'InternalServerError',
