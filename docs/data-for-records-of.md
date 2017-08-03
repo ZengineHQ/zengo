@@ -16,7 +16,7 @@ Example
 var formId = 123;
 var records = require('zengo').data.forRecordsOf(formId);
 
-fields.get(456).then(
+records.get(456).then(
   function(result) {
     // `result` is a record Object
   },
@@ -47,7 +47,7 @@ var params = {
   sort: 'id'
 }
 
-fields.query(params).then(
+records.query(params).then(
   function (result) {
     // `result` is an Array of records
   },
@@ -75,7 +75,7 @@ var records = require('zengo').data.forRecordsOf(formId);
 
 var data = { name: 'Record name' };
 
-fields.save(data).then(
+records.save(data).then(
   function (result) {
     // `result` is an Object or Array of records
   },
@@ -101,7 +101,7 @@ Example
 var formId = 123;
 var records = require('zengo').data.forRecordsOf(formId);
 
-forms.count().then(
+records.count().then(
   function (count) {
     // `count` is a Number
   },
