@@ -69,7 +69,7 @@ var User = function(api) {
 
 		var getMemberInfo = function(userId) {
 
-			var endpoint = ['/workspaces', workspaceId,'members'].join('/');
+			var endpoint = ['/workspaces', workspaceId, 'members'].join('/');
 
 			var options = {
 				'user.id': userId
