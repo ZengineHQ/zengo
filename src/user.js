@@ -62,6 +62,53 @@ var User = function(api) {
 
 	};
 
+	user.isAdmin = function(workspaceId, userId) {
+		var getUserId = function() {
+			return userId ? Promise.resolve(userId) : user.getId();
+		};
+
+		var getMemberInfo = function(userId) {
+
+			var endpoint = ['/workspaces', workspaceId, 'members'].join('/');
+
+			var options = {
+				'user.id': userId
+			};
+
+			return api.get(endpoint, options);
+
+		};
+
+		var checkMemberIsAdminOrOwner = function(count) {
+
+			if (count.length === 1 && count[0].role) {
+				return Promise.resolve([1,2].indexOf(count[0].role.id) !== -1);
+			} else {
+				return Promise.reject(unauthorizedError());
+			}
+
+		};
+
+		var onError = function(error) {
+
+			if (error.name === 'Unauthorized') {
+				return Promise.reject(error);
+			} else {
+				return Promise.reject(apiError());
+			}
+
+		};
+
+		var onSuccess = function(isAuthorized) {
+			return isAuthorized;
+		};
+
+		return getUserId()
+			.then(getMemberInfo)
+			.then(checkMemberIsAdminOrOwner)
+			.then(onSuccess, onError);
+	};
+
 	user.isAuthorizedInWorkspace = function(workspaceId, userId) {
 
 		var getUserId = function() {
