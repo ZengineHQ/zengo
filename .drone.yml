@@ -1,0 +1,26 @@
+pipeline:
+
+  test:
+    image: node:${NODE_VERSION}
+    commands:
+      - npm install --silent
+      - npm run lint
+      - npm test
+    environment:
+      - NODE_ENV=test
+
+  # notify:
+  #   image: plugins/slack
+  #   secrets: [slack_webhook]
+  #   webhook: "${SLACK_WEBHOOK}"
+  #   channel: zenbot
+  #   when:
+  #     status: [ success, failure ]
+
+matrix:
+  NODE_VERSION:
+    - 6-alpine
+    - 8-alpine
+    - 9-alpine
+    - alpine
+    - latest
