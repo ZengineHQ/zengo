@@ -85,9 +85,11 @@ var dispatch = function(eventData) {
 			message: 'Internal Server Error'
 		};
 
+		/* jshint ignore:start */
 		if (err instanceof Error && err.hasOwnProperty('message')) {
 			Object.defineProperty(err, 'message', { enumerable: true });
 		}
+		/* jshint ignore:end */
 
 		var payload = merge(defaultPayload, err);
 

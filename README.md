@@ -25,4 +25,4 @@ See the [contributing](docs/contributing.md) doc.
 
 # Documentation
 
-See [http://wizehive.github.io/zengo/](http://wizehive.github.io/zengo/)
+See the [API reference](http://wizehive.github.io/zengo/)
