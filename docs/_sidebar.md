@@ -9,5 +9,7 @@
   - [data.forFieldsOf](data-for-fields-of.md)
   - [data.forRecordsOf](data-for-records-of.md)
   - [data.forUsers](data-for-users.md)
+  - [fakes.znHttp](fakes-znhttp.md)
+  - [fakes.firebase](fakes-firebase.md)
   - [router](router.md)
   - [webhooks](webhooks.md)

@@ -6,8 +6,7 @@ Retrieves the user Id using the current access token. In short it does
 a request to `/users/me` endpoint.
 
 !> ***Important*** to note that if the request to the backend service is made without an access token
-and the service has offline permissions the access token used in this case is for the workspace user.
-This is a common scenario when the backend service is triggered by a webhook.
+and the backend service has offline permissions the access token used in this case is for the workspace user and not a real Zengine user.
 
 Returns a `Promise` resolved with the user id or rejects within one of
 the following errors:
