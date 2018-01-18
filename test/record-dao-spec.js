@@ -8,7 +8,7 @@ describe('RecordDao', function() {
 	var recordDao;
 
 	beforeEach(function() {
-		var znHttpFake = zengo.znHttpFake();
+		var znHttpFake = zengo.fakes.znHttp();
 		var data = zengo.data(znHttpFake);
 		formDao = data.forForms();
 		recordDao = data.forRecordsOf(7);

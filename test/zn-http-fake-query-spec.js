@@ -2,7 +2,7 @@
 
 describe('znHttpFake (query)', function() {
 
-	var query = require('../src/fake/zn-http-fake-query');
+	var query = require('../src/fakes/zn-http-fake-query');
 
 	describe('sortAndPaginate', function() {
 
