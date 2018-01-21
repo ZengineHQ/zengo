@@ -2,7 +2,7 @@
 
 describe('Firebase fake', function() {
 
-	var Firebase = require('../').firebaseFake;
+	var Firebase = require('../').fakes.firebase;
 
 	var fb;
 

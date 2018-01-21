@@ -22,7 +22,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -49,7 +49,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -76,7 +76,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -124,7 +124,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -172,7 +172,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -220,7 +220,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -245,7 +245,7 @@ describe('ZnHttpFake (catch all)', function() {
 				name: 'Workspace1'
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -283,7 +283,7 @@ describe('ZnHttpFake (catch all)', function() {
 				name: 'Workspace5'
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -328,7 +328,7 @@ describe('ZnHttpFake (catch all)', function() {
 				name: 'Role1'
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -373,7 +373,7 @@ describe('ZnHttpFake (catch all)', function() {
 				name: 'Role2'
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -419,7 +419,7 @@ describe('ZnHttpFake (catch all)', function() {
 				name: 'Workspace2 updated'
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -469,7 +469,7 @@ describe('ZnHttpFake (catch all)', function() {
 				name: 'Role2 updated'
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -511,7 +511,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -556,7 +556,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -593,7 +593,7 @@ describe('ZnHttpFake (catch all)', function() {
 				{ name: 'Workspace2' }
 			];
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -632,7 +632,7 @@ describe('ZnHttpFake (catch all)', function() {
 				{ name: 'Workspace6' }
 			];
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -679,7 +679,7 @@ describe('ZnHttpFake (catch all)', function() {
 				{ name: 'Role2' }
 			];
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -725,7 +725,7 @@ describe('ZnHttpFake (catch all)', function() {
 				{ name: 'Role3' }
 			];
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -771,7 +771,7 @@ describe('ZnHttpFake (catch all)', function() {
 				{ name: 'Workspace6' }
 			];
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -817,7 +817,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -845,7 +845,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -880,7 +880,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -908,7 +908,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -943,7 +943,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -971,7 +971,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -999,7 +999,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1027,7 +1027,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1055,7 +1055,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1089,7 +1089,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1121,7 +1121,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1159,7 +1159,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1185,7 +1185,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1211,7 +1211,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1237,7 +1237,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1263,7 +1263,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1289,7 +1289,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1315,7 +1315,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1341,7 +1341,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
@@ -1378,7 +1378,7 @@ describe('ZnHttpFake (catch all)', function() {
 				]
 			};
 
-			var znHttpFake = zengo.znHttpFake(datum);
+			var znHttpFake = zengo.fakes.znHttp(datum);
 
 			var api = Api(znHttpFake);
 
