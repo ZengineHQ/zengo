@@ -6,7 +6,7 @@ var RecordDaoRaw = function(api, formId) {
 
 	var getEndpoint = function(recordId) {
 		var endpoint = ['/forms', formId, 'records'].join('/');
-		if (recordId) {
+		if (recordId && !Array.isArray(recordId)) {
 			endpoint += '/' + recordId;
 		}
 		return endpoint;
@@ -14,7 +14,12 @@ var RecordDaoRaw = function(api, formId) {
 
 	dao.get = function(request) {
 		var endpoint = getEndpoint(request.id);
-		return api.get(endpoint);
+
+		if (request.id && !Array.isArray(request.id)) {
+			delete request.id;
+		}
+
+		return api.get(endpoint, request);
 	};
 
 	dao.query = function(request) {
@@ -28,6 +33,11 @@ var RecordDaoRaw = function(api, formId) {
 			return api.put(endpoint, request);
 		}
 		return api.post(endpoint, request);
+	};
+
+	dao.delete = function(request) {
+		var endpoint = getEndpoint(request.id);
+		return api.del(endpoint, request);
 	};
 
 	dao.count = function(request) {
