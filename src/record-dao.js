@@ -34,6 +34,10 @@ var RecordDao = function(formDao, recordDaoRaw, formId) {
 		return recordDaoRaw.save(request);
 	};
 
+	dao.delete = function(request) {
+		return recordDaoRaw.delete(request);
+	};
+
 	dao.count = function(request) {
 		return recordDaoRaw.count(request);
 	};

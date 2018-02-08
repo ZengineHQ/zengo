@@ -42,6 +42,58 @@ describe('RecordDaoRaw', function() {
 					});
 				});
 		});
+
+		it('should call GET api and return raw records', function() {
+
+			var recordDaoRaw = RecordDaoRaw(api, 7);
+
+			var apiResponse = {
+				data: [
+					{
+						id: 651,
+						field1: 'apples'
+					},
+					{
+						id: 652,
+						field1: 'bananas'
+					},
+					{
+						id: 653,
+						field1: 'oranges'
+					}
+				],
+				totalCount: 100
+			};
+
+			znNock.get('/forms/7/records?id=1%7C2%7C3&limit=3&attributes=field1%2Cid').reply(200, apiResponse);
+
+			var request = {
+				id: [1,2,3],
+				limit: 3,
+				attributes: ['field1','id']
+			};
+
+			return recordDaoRaw.get(request)
+				.then(function(response) {
+					expect(response).to.eql(
+						[
+							{
+								id: 651,
+								field1: 'apples'
+							},
+							{
+								id: 652,
+								field1: 'bananas'
+							},
+							{
+								id: 653,
+								field1: 'oranges'
+							}
+						]
+					);
+				});
+		});
+
 	});
 
 	describe('query', function () {

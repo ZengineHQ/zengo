@@ -36,6 +36,10 @@ describe('RecordDao', function() {
 				});
 			};
 
+			var deleteRecord = function(id) {
+				return recordDao.delete({id: id})
+			}
+
 			var query = function() {
 				return recordDao.query();
 			};
@@ -46,9 +50,22 @@ describe('RecordDao', function() {
 				expect(response.data[1].record.name).to.eql('bananas');
 				expect(response.data[0].form.name).to.eql('Fruits');
 				expect(response.data[1].form.name).to.eql('Fruits');
+				return response.data[0].record.id;
 			};
 
-			return saveForm().then(saveRecords).then(query).then(assert);
+			var assertDeleted = function(response) {
+				expect(response.totalCount).to.equal(1);
+				expect(response.data[0].record.name).to.eql('bananas');
+				expect(response.data[0].form.name).to.eql('Fruits');
+			};
+
+			return saveForm()
+				.then(saveRecords)
+				.then(query)
+				.then(assert)
+				.then(deleteRecord)
+				.then(query)
+				.then(assertDeleted);
 		});
 
 	});

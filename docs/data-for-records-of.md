@@ -6,7 +6,7 @@ Arguments
 
 Name      | Type            | Required  | Description
 ----------|-----------------|-----------|----------------------
-recordId  | String, Number  | &check;   | Record Id
+params    | Object          | &check;   | Object containing record id
 
 Returns a record `Object`.
 
@@ -16,7 +16,7 @@ Example
 var formId = 123;
 var records = require('zengo').data.forRecordsOf(formId);
 
-records.get(456).then(
+records.get({id: 456}).then(
   function(result) {
     // `result` is a record Object
   },
@@ -78,6 +78,32 @@ var data = { name: 'Record name' };
 records.save(data).then(
   function (result) {
     // `result` is an Object or Array of records
+  },
+  function(error) {
+    // catch an error
+  }
+);
+```
+
+### delete
+
+Arguments
+
+Name      | Type            | Required  | Description
+----------|-----------------|-----------|----------------------
+params    | Object          | &check;   | Params to delete on
+
+Returns a success code when deleting a single object or an `Array` of deleted ids when batch deleting.
+
+Example
+
+```js
+var formId = 123;
+var records = require('zengo').data.forRecordsOf(formId);
+
+records.delete({ id: 456 }).then(
+  function () {
+    // success
   },
   function(error) {
     // catch an error
