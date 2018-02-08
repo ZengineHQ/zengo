@@ -37,8 +37,8 @@ describe('RecordDao', function() {
 			};
 
 			var deleteRecord = function(id) {
-				return recordDao.delete({id: id})
-			}
+				return recordDao.delete({id: id});
+			};
 
 			var query = function() {
 				return recordDao.query();
