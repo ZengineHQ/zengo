@@ -93,7 +93,7 @@ Name      | Type            | Required  | Description
 ----------|-----------------|-----------|----------------------
 params    | Object          | &check;   | Params to delete on
 
-Returns a success code when deleting a single object or an `Array` of deleted ids when batch deleting.
+Returns a success code when deleting a single object or a `totalCount` when batch deleting.
 
 Example
 
