@@ -52,7 +52,14 @@ var createApi = function(znHttp) {
 	};
 
 	api.del = function(endpoint, options) {
-		return znHttp.del(endpoint, options).then(returnResponseData);
+		var options = {
+			params: assembleParams(params)
+		};
+
+		var returnParsedResponse = function(response) {
+			return response.getBody();
+		};
+		return znHttp.del(endpoint, options).then(returnParsedResponse);
 	};
 
 	api.count = function(endpoint, params) {

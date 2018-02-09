@@ -1,6 +1,6 @@
 {
   "name": "zengo",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "dependencies": {
     "bignumber.js": "^4.0.2",
     "bluebird": "^3.0.5",
