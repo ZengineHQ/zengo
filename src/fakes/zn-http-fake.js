@@ -131,8 +131,13 @@ var createZnHttpFake = function(data) {
 	znHttp.del = function(endpoint, options) {
 		var responseData = core.dispatch('DELETE', endpoint, options);
 		var body = {
-			data: responseData,
+			status: 200
 		};
+
+		if (responseData !== undefined) {
+			body.totalCount = responseData;
+		}
+
 		return respond(body);
 	};
 

@@ -520,7 +520,7 @@ describe('ZnHttpFake (catch all)', function() {
 			};
 
 			var checkReponse = function(results) {
-				expect(results).to.be.undefined;
+				expect(results).to.be.eql({ status: 200 });
 			};
 
 			var getData = function() {
@@ -565,7 +565,7 @@ describe('ZnHttpFake (catch all)', function() {
 			};
 
 			var checkResponse = function(results) {
-				expect(results).to.be.undefined;
+				expect(results).to.be.eql({ status: 200 });
 			};
 
 			var getData = function() {
