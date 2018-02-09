@@ -51,7 +51,7 @@ var createApi = function(znHttp) {
 		return znHttp.put(endpoint, data).then(returnResponseData);
 	};
 
-	api.del = function(endpoint, options) {
+	api.del = function(endpoint, params) {
 		var options = {
 			params: assembleParams(params)
 		};
