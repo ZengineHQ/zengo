@@ -158,6 +158,85 @@ describe('znHttpFake (query)', function() {
 
 	});
 
+	describe('filter', function() {
+
+		it('should only return a subset of records', function() {
+
+			var params = {
+				filter: {
+					and: [
+						{
+							prefix: '',
+							attribute: 'field123',
+							filter: {
+								and: [
+									{
+										prefix: '',
+										attribute: 'folder.id',
+										value: 3
+									}
+								]
+							}
+						}
+					]
+				}
+			};
+			var data = [
+				{
+					id: 1,
+					name: 'Record1'
+				},
+				{
+					id: 2,
+					name: 'Record2',
+					field123: {
+						id: 21,
+						name: 'Linked Record',
+						folder: {
+							id: 3
+						}
+					}
+				},
+				{
+					id: 2,
+					name: 'Record3',
+					field123: {
+						id: 21,
+						name: 'Linked Record',
+						folder: {
+							id: 4
+						}
+					}
+				},
+				{
+					id: 4,
+					name: 'Record4'
+				},
+				{
+					id: 5,
+					name: 'Record5'
+				}
+			];
+
+			var expected = [
+				{
+					id: 2,
+					name: 'Record2',
+					field123: {
+						id: 21,
+						name: 'Linked Record',
+						folder: {
+							id: 3
+						}
+					}
+				}
+			];
+
+			expect(query.filter(data, params)).to.deep.equal(expected);
+		});
+
+	});
+
 	describe('project', function() {
 
 		it('should return only selected attributes (multiple)', function() {
