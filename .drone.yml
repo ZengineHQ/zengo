@@ -19,6 +19,8 @@ pipeline:
 
 matrix:
   NODE_VERSION:
+    - 4-onbuild
+    - 4-alpine
     - 6-alpine
     - 8-alpine
     - 9-alpine
