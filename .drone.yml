@@ -19,10 +19,28 @@ pipeline:
 
 matrix:
   NODE_VERSION:
-    - 4-onbuild
-    - 4-alpine
+    - 4
+    - 4-wheezy
+    - 4-wheezy
+    - 4-stretch
+    - 4-slim
+    - 6
     - 6-alpine
+    - 6-wheezy
+    - 6-stretch
+    - 6-slim
+    - 8
     - 8-alpine
+    - 8-wheezy
+    - 8-stretch
+    - 8-slim
+    - 9
     - 9-alpine
+    - 9-wheezy
+    - 9-stretch
+    - 9-slim
     - alpine
+    - wheezy
+    - stretch
+    - slim
     - latest
