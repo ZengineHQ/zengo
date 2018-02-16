@@ -5,6 +5,7 @@
 - API Reference
   - [core.attribute](core-attribute.md)
   - [core.record](core-record.md)
+  - [core.form](core-form.md)
   - [data.forForms](data-for-forms.md)
   - [data.forFieldsOf](data-for-fields-of.md)
   - [data.forRecordsOf](data-for-records-of.md)
