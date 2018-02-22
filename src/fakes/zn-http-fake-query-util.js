@@ -135,7 +135,7 @@ queryUtil.getQueryParamsFilter = function(allParams) {
 				});
 			});
 
-			conditions.push({and: subConditions});
+			conditions.push({or: subConditions});
 
 			return;
 

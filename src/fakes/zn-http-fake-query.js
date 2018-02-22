@@ -14,7 +14,11 @@ fakeQuery.filter = function(data, params) {
 
 	var filter;
 
-	filter = util.getFilterParam(params) || util.getQueryParamsFilter(params);
+	filter = util.getFilterParam(params);
+
+	if (!filter) {
+		filter = util.getQueryParamsFilter(params);
+	}
 
 	if (filter) {
 		data = data.filter(function(record) {

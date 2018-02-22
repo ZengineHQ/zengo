@@ -84,7 +84,9 @@ var createZnCoreFake = function(data) {
 	router.put('/:resource/:resourceId', catchAll.updateResource);
 	router.put('/:resource/:resourceId/:subResource/:subResourceId', catchAll.updateSubResource);
 
+	router.del('/:resource', catchAll.deleteResource);
 	router.del('/:resource/:resourceId', catchAll.deleteResource);
+	router.del('/:resource/:resourceId/:subResource', catchAll.deleteSubResource);
 	router.del('/:resource/:resourceId/:subResource/:subResourceId', catchAll.deleteSubResource);
 
 	return {

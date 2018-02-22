@@ -501,6 +501,43 @@ describe('ZnHttpFake (catch all)', function() {
 
 	describe('del', function() {
 
+		it('should delete data for /:resource', function() {
+
+			var datum = {
+				workspaces: [
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2' },
+					{ id: 4, name: 'Workspace4' }
+				]
+			};
+
+			var znHttpFake = zengo.fakes.znHttp(datum);
+
+			var api = Api(znHttpFake);
+
+			var del = function() {
+				return api.del('/workspaces', {id: '1|2'});
+			};
+
+			var checkReponse = function(results) {
+				expect(results).to.be.eql({ status: 200, totalCount: 2 });
+			};
+
+			var getData = function() {
+				return api.get('/workspaces');
+			};
+
+			var checkData = function(results) {
+				var expected = [
+					{ id: 4, name: 'Workspace4' }
+				];
+				expect(results).to.be.eql(expected);
+			};
+
+			return del().then(checkReponse).then(getData).then(checkData);
+
+		});
+
 		it('should delete data for /:resource/:resourceId', function() {
 
 			var datum = {
@@ -536,6 +573,50 @@ describe('ZnHttpFake (catch all)', function() {
 			};
 
 			return del().then(checkReponse).then(getData).then(checkData);
+
+		});
+
+		it('should delete for /:resource/:resourceId/:subResource', function() {
+
+			var datum = {
+				workspaces: [
+					{ id: 1, name: 'Workspace1' },
+					{ id: 2, name: 'Workspace2' },
+					{
+						id: 4,
+						name: 'Workspace4',
+						roles: [
+							{ id: 201, name: 'Role1' },
+							{ id: 202, name: 'Role2' },
+							{ id: 203, name: 'ABC' }
+						]
+					}
+				]
+			};
+
+			var znHttpFake = zengo.fakes.znHttp(datum);
+
+			var api = Api(znHttpFake);
+
+			var del = function() {
+				return api.del('/workspaces/4/roles', {
+					'contains-name': 'Role'
+				});
+			};
+
+			var checkResponse = function(results) {
+				expect(results).to.be.eql({ status: 200, totalCount: 2 });
+			};
+
+			var getData = function() {
+				return api.get('/workspaces/4/roles');
+			};
+
+			var checkData = function(results) {
+				expect(results).to.be.eql([{ id: 203, name: 'ABC' }]);
+			};
+
+			return del().then(checkResponse).then(getData).then(checkData);
 
 		});
 
@@ -1189,7 +1270,12 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var api = Api(znHttpFake);
 
-			var params = { 'not-id': '1|2|4|5' };
+			var params = {
+				'not-id': '1',
+				'not-id': '2',
+				'not-id': '4',
+				'not-id': '5'
+			};
 
 			var check = function(results) {
 				expect(results.data).to.eql([ { id: 3, name: 'Workspace3' } ]);
@@ -1241,7 +1327,12 @@ describe('ZnHttpFake (catch all)', function() {
 
 			var api = Api(znHttpFake);
 
-			var params = { 'not-contains-name': 'space1|space3|space4|space5' };
+			var params = {
+				'not-contains-name': 'space1',
+				'not-contains-name': 'space3',
+				'not-contains': 'space4',
+				'not-contains': 'space5'
+			};
 
 			var check = function(results) {
 				expect(results.data).to.eql([ { id: 2, name: 'Workspace2' } ]);
