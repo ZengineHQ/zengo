@@ -272,18 +272,42 @@ var fakeDao = function(datum) {
 
 	dao.deleteResource = function(options) {
 
-		// todo: support batch delete
-
 		var data = get(datum, options.namedParams.resource);
 
 		if (!data) {
 			return;
 		}
 
-		var index = findIndex(data, { 'id': parseInt(options.namedParams.resourceId) });
+		var deleteObject = function(datum) {
 
-		if (index !== -1) {
-			data.splice(index, 1);
+			var index = findIndex(data, { 'id': parseInt(datum.id) });
+
+			if (index !== -1) {
+				data.splice(index, 1);
+			}
+
+		};
+
+		if (options.namedParams.resourceId) {
+			deleteObject({
+				id: options.namedParams.resourceId
+			});
+		} else { // batch delete
+
+			var oldCount = data.length;
+
+			var queried = dao.queryResource(options);
+
+			if (!queried ||
+				!queried.data) {
+				return;
+			}
+
+			forEach(queried.data, deleteObject);
+
+			return oldCount - data.length;
+
+
 		}
 
 		return;
@@ -291,8 +315,6 @@ var fakeDao = function(datum) {
 	};
 
 	dao.deleteSubResource = function(options) {
-
-		// todo: support batch delete
 
 		var data = get(datum, options.namedParams.resource);
 
@@ -304,13 +326,36 @@ var fakeDao = function(datum) {
 			return;
 		}
 
-		var index = findIndex(data, { 'id': parseInt(options.namedParams.subResourceId) });
+		var deleteObject = function(datum) {
 
-		if (index !== -1) {
-			data.splice(index, 1);
+			var index = findIndex(data, { 'id': parseInt(datum.id) });
+
+			if (index !== -1) {
+				data.splice(index, 1);
+			}
+
+		};
+
+		if (options.namedParams.subResourceId) {
+			deleteObject({
+				id: options.namedParams.subResourceId
+			});
+		} else { // batch delete
+
+			var oldCount = data.length;
+
+			var queried = dao.querySubResource(options);
+
+			if (!queried ||
+				!queried.data) {
+				return;
+			}
+
+			forEach(queried.data, deleteObject);
+
+			return oldCount - data.length;
+
 		}
-
-		return;
 
 	};
 

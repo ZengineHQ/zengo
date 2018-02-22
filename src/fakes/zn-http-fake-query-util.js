@@ -135,7 +135,16 @@ queryUtil.getQueryParamsFilter = function(allParams) {
 				});
 			});
 
-			conditions.push({and: subConditions});
+			var operator = 'or',
+				condition = {};
+
+			if (prefix.indexOf('not') !== -1) {
+				operator = 'and';
+			}
+
+			condition[operator] = subConditions;
+
+			conditions.push(condition);
 
 			return;
 
