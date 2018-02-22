@@ -1271,10 +1271,7 @@ describe('ZnHttpFake (catch all)', function() {
 			var api = Api(znHttpFake);
 
 			var params = {
-				'not-id': '1',
-				'not-id': '2',
-				'not-id': '4',
-				'not-id': '5'
+				'not-id': '1|2|4|5'
 			};
 
 			var check = function(results) {
@@ -1328,10 +1325,7 @@ describe('ZnHttpFake (catch all)', function() {
 			var api = Api(znHttpFake);
 
 			var params = {
-				'not-contains-name': 'space1',
-				'not-contains-name': 'space3',
-				'not-contains': 'space4',
-				'not-contains': 'space5'
+				'not-contains-name': 'space1|space3|space4|space5'
 			};
 
 			var check = function(results) {
