@@ -291,7 +291,7 @@ var fakeDao = function(datum) {
 		if (options.namedParams.resourceId) {
 			deleteObject({
 				id: options.namedParams.resourceId
-			})
+			});
 		} else { // batch delete
 
 			var oldCount = data.length;
@@ -339,7 +339,7 @@ var fakeDao = function(datum) {
 		if (options.namedParams.subResourceId) {
 			deleteObject({
 				id: options.namedParams.subResourceId
-			})
+			});
 		} else { // batch delete
 
 			var oldCount = data.length;
