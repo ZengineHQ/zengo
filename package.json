@@ -28,7 +28,7 @@
     "lodash.set": "^4.1.0",
     "lodash.some": "^4.6.0",
     "route-pattern": "0.0.6",
-    "zn-filter-matcher": "1.2.1"
+    "zn-filter-matcher": "1.2.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
