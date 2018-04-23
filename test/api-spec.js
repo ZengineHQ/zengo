@@ -32,6 +32,8 @@ describe('Api', function() {
 				});
 
 			return api.get('/forms/123/records').then(function(records) {
+				// make it fail
+				expectedRecords[1].id = 4;
 				expect(records).to.eql(expectedRecords);
 			});
 		});
