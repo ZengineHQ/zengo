@@ -12,6 +12,7 @@ describe('Attribute', function() {
 
 		it('should return FALSE if not a field', function() {
 			expect(attribute.isField('id')).to.be.false;
+			expect(attribute.isField('field123i')).to.be.false;
 		});
 
 	});
