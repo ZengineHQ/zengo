@@ -3,7 +3,7 @@
 var Attribute = {};
 
 Attribute.isField = function(attribute) {
-	return /^field[0-9]+/.test(attribute);
+	return /^field[0-9]+$/.test(attribute);
 };
 
 Attribute.forFieldId = function(id) {
