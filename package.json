@@ -48,7 +48,7 @@
     "codesmell": "jshint test src index.js",
     "lint": "npm run codesmell -s",
     "test": "mocha --reporter min --require test/support/mocha.js",
-	"test-ci": "MOCHA_FILE=~/junit/test-results.xml mocha test --reporter mocha-junit-reporter",
+	"test-ci": "MOCHA_FILE=~/junit/test-results.xml mocha test --require test/support/mocha.js --reporter mocha-junit-reporter",
     "test:watch": "watch 'npm run test -s'",
     "watch": "watch 'npm run test -s || npm run lint -s'"
   },
