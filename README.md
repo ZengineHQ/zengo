@@ -1,7 +1,7 @@
 # zengo
 An idiom for Zengine backend services.
 
-[![Build Status](https://drone.appsrv.com/api/badges/Wizehive/zengo/status.svg)](https://drone.appsrv.com/Wizehive/zengo)
+[![CircleCI](https://circleci.com/gh/evert0n/zengo.svg?style=svg&circle-token=0938859179484143e684561562ef1932487c0b51)]
 
 The goal of this project is to incorporate all the infrastructural code necessary to develop a backend service, so plugin developers can focus on business rules instead. Project scope includes, for example, basic data access, test helpers (fakes and builders), routing, common advanced queries and data manipulation.
 
