@@ -2,6 +2,7 @@
 
 var get = require('lodash.get');
 var set = require('lodash.set');
+var merge = require('lodash.merge');
 
 var createFirebase = function(path, data) {
 
@@ -31,6 +32,25 @@ var createFirebase = function(path, data) {
 		if (cb) {
 			cb();
 		}
+	};
+
+	fb.update = function(value, cb) {
+
+		var path = objPath();
+
+		if (path) {
+
+			var oldValue = get(fb.data, path) || {};
+			set(fb.data, path, merge(oldValue, value));
+
+		} else {
+			merge(fb.data, value);
+		}
+
+		if (cb) {
+			cb();
+		}
+
 	};
 
 	fb.once = function(ev, resolve, reject) {
