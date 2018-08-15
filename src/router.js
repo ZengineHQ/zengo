@@ -78,7 +78,20 @@ var dispatch = function(eventData) {
 
 		err = err || {};
 
-		var status = err.status || err.code || 500;
+		var status = 500;
+		var keys = ['status', 'code'];
+
+		for (var i = 0; i < keys.length; i++) {
+
+			var key = keys[i];
+			var val = err[key];
+
+			if (parseInt(val)) {
+				status = val;
+				delete err[key];
+				break;
+			}
+		}
 
 		var defaultPayload = {
 			name: 'InternalServerError',
@@ -96,8 +109,6 @@ var dispatch = function(eventData) {
 		if (!payload.log && status === 500 && err.stack) {
 			payload.log = err.stack;
 		}
-
-		delete payload.status;
 
 		return response.status(status).send(payload);
 
