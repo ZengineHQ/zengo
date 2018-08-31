@@ -205,6 +205,132 @@ describe('Api', function() {
 		});
 	});
 
+
+	describe('queryAll', function() {
+
+		it('should GET to api and return all results', function() {
+
+			const endpoint = '/forms/123/records';
+
+			const totalCount = 5;
+
+			const page1 = {
+				status: 200,
+  				code: 2000,
+  				data: [
+					{
+						id: 1
+					}
+  				],
+  				limit: 1,
+  				totalCount: totalCount
+			};
+
+			const page2 = {
+				status: 200,
+  				code: 2000,
+  				data: [
+					{
+						id: 2
+					}
+  				],
+  				limit: 1,
+  				totalCount: totalCount
+			};
+
+			const page3 = {
+				status: 200,
+  				code: 2000,
+  				data: [
+					{
+						id: 3
+					}
+  				],
+  				limit: 1,
+  				totalCount: totalCount
+			};
+
+			const page4 = {
+				status: 200,
+  				code: 2000,
+  				data: [
+					{
+						id: 4
+					}
+  				],
+  				limit: 1,
+  				totalCount: totalCount
+			};
+
+			const page5 = {
+				status: 200,
+  				code: 2000,
+  				data: [
+					{
+						id: 5
+					},
+					{
+						id: 6
+					}
+  				],
+  				limit: 1,
+  				totalCount: totalCount
+			};
+
+			var expectedRecords = [
+				{
+					id: 1
+				},
+				{
+					id: 2
+				},
+				{
+					id: 3
+				},
+				{
+					id: 4
+				},
+				{
+					id: 5
+				},
+				{
+					id: 6
+				}
+			];
+
+			nock('https://api.zenginehq.com/v1')
+				.get('/forms/123/records?page=1&limit=5')
+				.reply(200, page1);
+
+			nock('https://api.zenginehq.com/v1')
+				.get('/forms/123/records?page=2&limit=5')
+				.reply(200, page2);
+
+			nock('https://api.zenginehq.com/v1')
+				.get('/forms/123/records?page=3&limit=5')
+				.reply(200, page3);
+
+			nock('https://api.zenginehq.com/v1')
+				.get('/forms/123/records?page=4&limit=5')
+				.reply(200, page4);
+
+			nock('https://api.zenginehq.com/v1')
+				.get('/forms/123/records?page=5&limit=5')
+				.reply(200, page5);
+
+			var params = {
+				page: 1,
+				limit: 5
+			};
+
+			return api.queryAll(endpoint, params).then(function(results) {
+				expect(results).to.be.eql(expectedRecords);
+			});
+
+		});
+
+	});
+
 	describe('post', function() {
 
 		it('should POST to api and return response data', function() {

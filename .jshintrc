@@ -18,7 +18,7 @@
   "strict": "global",
   "undef": true,
   "unused": "vars",
-
+  "esversion": 6,
   "debug": true,
 
   "node": true,

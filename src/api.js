@@ -33,6 +33,49 @@ var createApi = function(znHttp) {
 		return znHttp.get(endpoint, options).then(returnParsedResponse);
 	};
 
+
+	api.queryAll = function(endpoint, params) {
+
+		params.page = 1;
+
+		const returnData = function(body) {
+
+			const totalCount = body.totalCount,
+				limit = body.limit;
+
+			if (totalCount > limit) {
+
+				const promises = [],
+					numPages = Math.ceil(totalCount / limit);
+
+				for (let page = 2; page <= numPages; page++) {
+
+					params.page = page;
+
+					promises.push(api.get(endpoint, params));
+				}
+
+				return Promise.all(promises).then(function(pages) {
+
+					let data = body.data;
+
+					pages.forEach(function(page) {
+						data = data.concat(page);
+					});
+
+					return data;
+
+				});
+
+			}
+
+			return body.data;
+		};
+
+		return api.query(endpoint, params).then(returnData);
+
+	};
+
 	api.queryFirst = function(endpoint, params) {
 		return api.query(endpoint, params).then(function(response) {
 			return response.data[0];

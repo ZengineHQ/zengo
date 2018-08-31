@@ -27,6 +27,11 @@ var RecordDaoRaw = function(api, formId) {
 		return api.query(endpoint, request);
 	};
 
+	dao.queryAll = function(request) {
+		var endpoint = getEndpoint();
+		return api.queryAll(endpoint, request);
+	};
+
 	dao.save = function(request) {
 		var endpoint = getEndpoint(request.id);
 		if (request.id) {

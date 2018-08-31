@@ -57,6 +57,37 @@ records.query(params).then(
 );
 ```
 
+### queryAll
+
+Arguments
+
+Name      | Type            | Required      | Description
+----------|-----------------|---------------|----------------------
+params    | Object          | *Optional*    | An object with [query params](https://zenginehq.github.io/developers/rest-api/conventions/querying-options/)
+
+Returns a concatenated `Array` of all pages of records matching the params.
+
+Example
+
+```js
+var formId = 123;
+var records = require('zengo').data.forRecordsOf(formId);
+
+var params = {
+  attributes: 'id, name',
+  sort: 'id'
+}
+
+records.queryAll(params).then(
+  function (result) {
+    // `result` is an Array of records
+  },
+  function(error) {
+    // catch an error
+  }
+);
+```
+
 ### save
 
 Arguments

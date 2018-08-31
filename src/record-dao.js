@@ -30,6 +30,10 @@ var RecordDao = function(formDao, recordDaoRaw, formId) {
 		return getForm().then(queryRecords);
 	};
 
+	dao.queryAll = function(request) {
+		return recordDaoRaw.queryAll(request);
+	};
+
 	dao.save = function(request) {
 		return recordDaoRaw.save(request);
 	};
