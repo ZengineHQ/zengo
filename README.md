@@ -11,13 +11,13 @@ The project should also be a place of discussion, where any developer can collab
 
 With npm
 ```bash
-npm install git+ssh://git@github.com/WizeHive/zengo --save
+npm install @zenginehq/zengo
 ```
 
 Or reference the github url in your package.json.
 ```json
 "dependencies": {
-    "zengo": "git+ssh://git@github.com/WizeHive/zengo.git"
+    "@zenginehq/zengo": "1.0.0"
  },
 ```
 
