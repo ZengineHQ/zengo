@@ -27,4 +27,4 @@ See the [contributing](docs/contributing.md) doc.
 
 # Documentation
 
-See the [API reference](http://wizehive.github.io/zengo/).
+See the [API reference](http://zenginehq.github.io/zengo/).
