@@ -66,6 +66,7 @@ var dispatch = function(eventData) {
 
 	var request = eventData.request;
 	var response = eventData.response;
+	var znHttp = eventData.znHttp;
 
 	var method = request.method;
 	var firstAction = extractFirstAction(request.originalUrl);
@@ -118,7 +119,7 @@ var dispatch = function(eventData) {
 
 	if (callback) {
 		try {
-			return callback(request, response).then(onSuccess).catch(onError);
+			return callback(request, response, znHttp).then(onSuccess).catch(onError);
 		}
 		catch(e) {
 			return onError(e);
